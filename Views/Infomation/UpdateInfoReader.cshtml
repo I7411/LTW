@@ -1,0 +1,134 @@
+﻿@model Library_Management.Models.UpdateViewModel
+@{
+    ViewBag.Title = "UpdateInfoReader";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Thông tin cá nhân</title>
+    <link rel="stylesheet" href="~/wwwroot/css/trangthongtin.css" />
+</head>
+<body>
+    <header>
+        <h1>Thông tin cá nhân</h1>
+        <i>
+            <a href="@Url.Action("ReaderHome","Home")" style="font-weight: bold; color: black">
+                Trở về
+            </a>
+        </i>
+    </header>
+
+    @using (Html.BeginForm("UpdateInfo", "Infomation", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken();
+        <div class="container">
+            @{
+                var userId = Session["MANGUOIDUNG"];
+                var Database = new Library_Management.Models.QUANLYTHUVIENEntities();
+                var docgia = Database.DOCGIAs.FirstOrDefault(t => t.MATHANHVIEN == userId);
+                var the = Database.THEBANDOCs.FirstOrDefault(t => t.MATHANHVIEN == userId);
+                DateTime dob;
+                bool isDate = DateTime.TryParse(docgia.NGSINH?.ToString(), out dob);
+                DateTime db;
+                bool isDate1 = DateTime.TryParse(the.HANSUDUNG?.ToString(), out db);
+            }
+
+            <table>
+                <tr>
+                    <td rowspan="4">
+                        <img height="150px" src="~/wwwroot/Images/cat.jpg" alt="minhhoa" />
+                    </td>
+                    <td class="Title">Mã độc giả:</td>
+                    <td colspan="2">
+                        <input type="text" name="MATHANHVIEN" value="@docgia.MATHANHVIEN" disabled />
+                    </td>
+                    <td class="Title">Nghề nghiệp:</td>
+                    <td colspan="2">
+
+                        <input type="text" name="NGHENGHIEP" style="width: 70%" value="@docgia.NGHENGHIEP" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="Title">Họ tên:</td>
+                    <td colspan="2">
+                        <input type="text" name="TENTV" value="@docgia.TENTV" disabled />
+                    </td>
+                    <td class="Title">Giới tính</td>
+                    <td>
+                        <select name="GIOITINH" style="width: 70%">
+                            <option value="male" @(docgia.GIOITINH == "male" ? "selected" : "")>Nam</option>
+                            <option value="female" @(docgia.GIOITINH == "female" ? "selected" : "")>Nữ</option>
+                            <option value="different" @(docgia.GIOITINH == "different" ? "selected" : "")>Khác</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="Title">Ngày sinh:</td>
+                    <td colspan="2">
+                        <input type="date" name="NGSINH" value="@(isDate ? dob.ToString("yyyy-MM-dd") : "")" />
+                    </td>
+                    <td class="Title">Khóa học</td>
+                    <td colspan="2">
+                        <input type="text" name="KHOAHOC" style="width: 70%" value="@docgia.KHOAHOC" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="Title">Email</td>
+                    <td colspan="2">
+                        <input type="text" name="EMAIL" style="width: 100%" value="@docgia.EMAIL" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="Title">Địa chỉ:</td>
+                    <td colspan="8">
+                        <input type="text" name="DIACHI" style="width: 100%" value="@docgia.DIACHI" />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="10">
+                        <h1><b>Thông tin thẻ</b></h1>
+                        <hr />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="Title">Mã số thẻ:</td>
+                    <td colspan="3">
+                        <input type="text" name="MASOTHE" value="@the.MASOTHE" disabled />
+                    </td>
+                    <td class="Title">Vai trò:</td>
+                    <td colspan="3">
+                        <input type="text" name="VAITRO" value="@docgia.VAITRO" disabled />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="Title">Tình trạng thẻ:</td>
+                    <td colspan="3">
+                        <input type="text" name="TINHTRANGTHE" value="@the.TINHTRANGTHE" disabled />
+                    </td>
+                    <td class="Title">Hạn sử dụng:</td>
+                    <td colspan="3">
+                        <input type="date" name="HANSUDUNG" value="@(isDate1 ? db.ToString("yyyy-MM-dd") : "")" disabled />
+                    </td>
+                </tr>
+            </table>
+
+
+            <div class="button">
+                <button type="submit">
+                    Cập nhật thông tin
+                </button>
+                <button style="width: 100px; background-color: gray"
+                        type="submit"
+                        onclick="location.href = '@Url.Action("InfoReader","Infomation")'">
+                    Hủy
+                </button>
+            </div>
+        </div>
+    }
+</body>
+</html>
+
+

@@ -1,0 +1,333 @@
+﻿
+@{
+    ViewBag.Title = "CardManagement";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản lý thẻ độc giả</title>
+    <link rel="stylesheet" href="~/wwwroot/css/ReaderManagement.css" />
+    <link rel="stylesheet" href="~/wwwroot/css/MainPage_Admin.css" />
+    <link rel="stylesheet" href="~/wwwroot/css/AccountManagement.css" />
+    <style>
+        .container {
+            padding: 20px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            position: relative;
+            margin-top: 10px;
+            gap: 20px
+        }
+
+            .buttons button {
+                padding: 10px 20px;
+                background-color: #007bff;
+                color: white;
+                border: none;
+                cursor: pointer;
+                border-radius: 10px;
+            }
+
+                .buttons button:nth-child(2) {
+                    background-color: #dc3545;
+                }
+
+                .buttons button:last-child {
+                    background-color: #dc3545;
+                }
+
+                    .buttons button:nth-child(2):hover,
+                    .buttons button:last-child:hover {
+                        background-color: lightcoral;
+                    }
+
+                .buttons button:hover {
+                    background-color: lightskyblue;
+                }
+
+        .table-section {
+            margin-top: 20px;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            background-color: white;
+        }
+
+        .container {
+            background-color: #FFF;
+            border: #007bff solid;
+        }
+
+            .container table {
+                border: none;
+            }
+
+                .container table td {
+                    border: none;
+                }
+
+                .container table tr td:first-child {
+                    width: 150px;
+                }
+
+        #readerTable thead th {
+            background-color: #007bff;
+            color: white;
+            border: #007bff solid 1px;
+        }
+
+        #readerTable {
+            text-align: center;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #ddd;
+        }
+
+        th,
+        td {
+            padding: 10px;
+        }
+
+        .navigation span {
+            color: red;
+            font-size: 25px;
+            text-align: center;
+        }
+
+        label {
+            color: black;
+        }
+
+        .navigation {
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        span {
+            color: red;
+        }
+        #readerTable tbody tr:hover {
+            background-color: lightskyblue;
+        }
+        #btnClear {
+            height: 90%;
+            background-color: lightblue;
+        }
+
+            #btnClear:hover {
+                background-color: gray;
+            }
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <div class="imgTitle"><img src="~/wwwroot/Images/Logo.png" alt="" /></div>
+            <div class="titleHeader">
+                <strong>
+                    <img src="~/wwwroot/Images/book.png" alt="" />HỌC HẾT SỨC - CHƠI
+                    HẾTMÌNH
+                </strong>
+                <div class="Search"> <input type="text" name="Search" placeholder="Nhập thông tin cần tìm!"> <button id="Search">Tìm</button></div>
+            </div>
+        </div>
+        <div style="height: 50px;" class="navigation">
+            <span>Quản lý thẻ độc giả</span>
+        </div>
+    </header>
+    <div class="container">
+        <table style="width: 80%;">
+            <tr>
+                <td><label for="cardId">Mã số thành viên <span>(*)</span></label></td>
+                <td><input type="text" id="cardId" /></td>
+                <td><label for="role">Vai trò <span>(*)</span></label></td>
+                <td><input type="text" id="role" /></td>
+            </tr>
+            <tr>
+                <td><label for="name">Họ tên <span>(*)</span></label></td>
+                <td><input type="text" id="name" /></td>
+                <td><label for="status">Tình trạng <span>(*)</span></label></td>
+
+                <td>
+                    <select id="status">
+                        <option value="Hoạt động">Hoạt động  </option>
+                        <option value="Không hoạt động">Không hoạt động </option>
+                        <option value="Chưa cấp">Chưa cấp </option>
+                        <option value="Yêu cầu gia hạn">Yêu cầu gia hạn</option>
+                        <option value="Yêu cầu cấp thẻ">Yêu cầu cấp thẻ</option>
+                        <option value="Chờ nhận">Chờ nhận</option>
+                    </select>
+                </td>
+                <td style="width:30px;"><button id="btnClear">Xóa dữ liệu</button></td>
+
+            </tr>
+            <tr>
+                <td><label for="address">Địa chỉ <span>(*)</span></label></td>
+                <td><input type="text" id="address" /></td>
+                <td><label for="extendYears">Số năm gia hạn <span>(*)</span></label></td>
+                <td><input type="number" id="extendYears" min="1" value="1" /></td>
+            </tr>
+        </table>
+        <div class="buttons">
+            <button id="btnUpdate">Cập nhật</button>
+            <button id="btnDelete">Xóa</button>
+            <button id="btnExtend">Gia hạn thẻ</button>
+
+            <button onclick="location.href = '@Url.Action("LibrarianHome","Home")'">Thoát</button>
+        </div>
+    </div>
+
+    <div class="table-section">
+        <h2>Thông tin thẻ độc giả</h2>
+        <table id="readerTable">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Mã số thẻ</th>
+                    <th>Mã Thành viên</th>
+                    <th>Họ tên</th>
+                    <th>Địa chỉ</th>
+                    <th>Vai trò</th>
+                    <th>Tình trạng</th>
+                    <th>Ngày hết hạn</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var Database = new Library_Management.Models.QUANLYTHUVIENEntities();
+                    var list = (
+                        from dociga in Database.DOCGIAs
+                        join the in Database.THEBANDOCs on dociga.MATHANHVIEN equals the.MATHANHVIEN
+                        select new
+                        {
+                            MaThe = the.MASOTHE,
+                            MaThanhVien = dociga.MATHANHVIEN,
+                            Hoten = dociga.TENTV,
+                            DiaChi = dociga.DIACHI,
+                            VaiTro = dociga.VAITRO,
+                            TinhTrang = the.TINHTRANGTHE,
+                            NgayHetHan = the.HANSUDUNG,
+                        }
+                        ).ToList();
+                    int stt = 1;
+                    foreach (var item in list)
+                    {
+                        <tr>
+                            <td>@stt</td>
+                            <td>@item.MaThe</td>
+                            <td>@item.MaThanhVien</td>
+                            <td>@item.Hoten</td>
+                            <td>@item.DiaChi</td>
+                            <td>@item.VaiTro</td>
+                            <td>@item.TinhTrang</td>
+                            <td>@(item.NgayHetHan)</td>
+                        </tr>
+                        stt++;
+                    }
+
+                }
+            </tbody>
+        </table>
+    </div>
+    <script src="@Url.Content("~/wwwroot/JS/jquery-3.3.1.min.js")"></script>
+
+    <script>
+        $("#readerTable tbody tr").click(function () {
+            var code = $(this).find("td:eq(2)").text().trim();
+            var name = $(this).find("td:eq(3)").text().trim();
+            var add = $(this).find("td:eq(4)").text().trim();
+            var vt = $(this).find("td:eq(5)").text().trim();
+            var tt = $(this).find("td:eq(6)").text().trim();
+            var hsd = $(this).find("td:eq(7)").text().trim();
+
+            $("#cardId").val(code);
+            $("#name").val(name);
+            $("#address").val(add);
+            $("#role").val(vt);
+            $("#status").val(tt);
+            $("#extendYears").val(hsd);
+        });
+        //xóa dữ liệu
+        $("#btnClear").click(function () {
+            $("#cardId").val('');
+            $("#name").val('');
+            $("#address").val('');
+            $("#role").val('');
+            $("#status").val('');
+            $("#extendYears").val('');
+        });
+
+        function getFormData() {
+            return {
+                MaThe: $("#cardId").val(),
+                HoTen: $("#name").val(),
+                DiaChi: $("#address").val(),
+                VaiTro: $("#role").val(),
+                TinhTrang: $("#status").val(),
+                ExtendYears: parseInt($("#extendYears").val())
+            };
+        }
+
+        $("#btnDelete").click(function () {
+            var maThe = $("#cardId").val();
+            if (!maThe) return alert("Vui lòng chọn thẻ để xóa.");
+
+            $.post("/Management/DeleteCard", { MaThe: maThe }, function (res) {
+                if (res.success) {
+                    alert("Xóa thành công!");
+                    location.reload();
+                } else {
+                    alert("Không xóa được thẻ.");
+                }
+            });
+        });
+
+        $("#btnUpdate").click(function () {
+            var data = getFormData();
+            $.post("/Management/UpdateCard", data, function (res) {
+                if (res.success) {
+                    alert("Cập nhật thành công!");
+                    location.reload();
+                } else {
+                    alert("Không thể cập nhật.");
+                }
+            });
+        });
+
+        $("#btnExtend").click(function () {
+            var maThe = $("#cardId").val();
+            var years = parseInt($("#extendYears").val());
+
+            $.post("/Management/ExtendCard", { MaThe: maThe, ExtendYears: years }, function (res) {
+                if (res.success) {
+                    alert("Gia hạn thành công!");
+                    location.reload();
+                } else {
+                    alert("Không thể gia hạn.");
+                }
+            });
+        });
+
+    </script>
+
+    <script src="~/wwwroot/JS/Trang quản lý thẻ.js">
+    </script>
+</body>
+</html>
+
+

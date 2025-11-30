@@ -1,0 +1,101 @@
+﻿
+@{
+    ViewBag.Title = "InfoAdmin";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/wwwroot/css/trangthongtin.css" />
+    <title>Your Info</title>
+</head>
+<body>
+    <header>
+        <h1>Thông tin cá nhân</h1>
+        <i>
+            <a href="@Url.Action("AdminHome","Home")" style="font-weight: bold; color: black">
+                Trở về
+            </a>
+        </i>
+    </header>
+    @if (TempData["Notice"] != null)
+    {
+        <div id="Notice" style="display: flex; align-items: center; justify-content: center;
+                            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+                            padding: 10px 20px; color: white; background-color: greenyellow;
+                            height: auto; max-width: 90%; z-index: 1000;
+                            border-radius: 5px; font-weight: bold;">
+            @TempData["Notice"]
+        </div>
+    }
+    <div class="container">
+        <table>
+            @{
+                var userId = Session["MANGUOIDUNG"];
+                var Database = new Library_Management.Models.QUANLYTHUVIENEntities();
+                var TT = Database.NHANVIENs.FirstOrDefault(t => t.MANV == userId);
+                DateTime dob;
+                var showDate = "";
+                if (DateTime.TryParse(TT.NGSINH?.ToString(), out dob))
+                {
+                    showDate = dob.ToString("dd/MM/yyyy");
+                }
+            }
+            <tr>
+                <td rowspan="4">
+                    <img width="200px"
+                         style="display: flex; justify-items: center; align-items: center"
+                         src="~/wwwroot/Images/Admin.png"
+                         alt="minhhoa" />
+                </td>
+                <td class="Title">Mã nhân viên</td>
+                <td colspan="2">@TT.MANV</td>
+            </tr>
+            <tr>
+                <td class="Title">Họ tên:</td>
+                <td colspan="2">@TT.TENNV</td>
+            </tr>
+            <tr>
+                <td class="Title">Email</td>
+                <td colspan="2">@TT.EMAIL</td>
+            </tr>
+            <tr>
+                <td class="Title">Giới tính:</td>
+                <td colspan="2">@TT.GIOITINH</td>
+            </tr>
+
+            <tr>
+                <td colspan="1" class="Title">Vai trò: @TT.VAITRO</td>
+                <td class="Title">Ngày sinh:</td>
+                <td colspan="2">@showDate</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class="Title">SDT</td>
+                <td colspan="2">@TT.SODIENTHOAI</td>
+            </tr>
+            <tr>
+                <td class="Title">Địa chỉ:</td>
+                <td colspan="8">@TT.DIACHI</td>
+            </tr>
+            <tr></tr>
+        </table>
+
+        <div class="button">
+            <button type="submit" onclick="location.href = '@Url.Action("UpdateInfoAdmin","Infomation")'">
+                Cập nhật thông tin
+            </button>
+        </div>
+    </div>
+    <script> setTimeout(function () {
+            var alert = document.getElementById('Notice');
+            if (alert) {
+                alert.style.display = 'none';
+            }
+        }, 3000);</script>
+</body>
+</html>
+

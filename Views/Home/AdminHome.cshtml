@@ -1,0 +1,78 @@
+﻿@model List<Library_Management.Models.DOCGIA>
+@{
+    ViewBag.Title = "MainPageAdmin";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MainPageAdmin</title>
+    <link rel="stylesheet" href="~/wwwroot/CSS/PageAdmin.css" />
+</head>
+<body id="container">
+    <header>
+        <div class="logo">
+            <div class="imgTitle"><img src="~/wwwroot/Images/Logo.png" alt="" /></div>
+            <div class="titleHeader">
+                <strong>
+                    <img src="~/wwwroot/Images/book.png" alt="" />HỌC HẾT SỨC - CHƠI
+                    HẾTMÌNH
+                </strong>
+            </div>
+        </div>
+        <div class="navigation">
+            <ul class="MenuLevel1">
+                <li>
+                    <a ><strong>Hệ Thống</strong></a>
+                    <ul class="MenuLevel2">
+                        <li>
+                            <a href="@Url.Action("InfoAdmin","Infomation")">Thông tin cá nhân</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("ChangePassWord","Account")">Đổi mật khẩu</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Logout","Account")">Đăng xuất</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a><strong>Danh Mục</strong></a>
+                    <ul class="MenuLevel2">
+                        <li>
+                            <a href="@Url.Action("AccountManagement","ManagementAdmin")">Quản lý tài khoản </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("HRM","ManagementAdmin")">Quản lý nhân viên</a>
+                        </li>
+                        <li>
+                            <a href="">Quản lý hệ thống</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="@Url.Action("RequestsAndReports","Report")"><strong>Duyệt báo cáo, thống kê</strong></a>
+                </li>
+            </ul>
+        </div>
+    </header>
+    <div class="content">
+        <img class="Background" src="~/wwwroot/Images/Background_QL.png" alt="" />
+   
+    </div>
+    <footer class="footer">
+        <p>
+            <strong>Trung tâm Thông tin - Thư viện Đại Học </strong> <br />
+            Trường Đại Học Công Thương TP.HCM<br />
+            Địa chỉ liên hệ: 140 Lê Trọng Tấn, Tân Phú, TP. Hồ Chí Minh, Việt Nam<br />
+            Điện thoại: 028 3816 1673 - 137<br />
+            Email: thuvien@huit.edu.vn<br />
+            Hotline: 097 117 3837
+        </p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,207 @@
+﻿@model Library_Management.Models.BorrowDocumentsViewModel
+@{
+    ViewBag.Title = "BorrowDocuments";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/wwwroot/CSS/BorrowDocuments.css" />
+    <title>Borrow Documents</title>
+</head>
+<body>
+        @if (TempData["Error"] != null)
+        {
+            <div class="toast" id="error-toast"  style="background-color: red;position:absolute; height:40px; margin-left:500px;margin-top:20px;color:white; border-radius:10px; display:flex; justify-content:center;align-content:center; align-items:center; padding:0px 5px" >
+                @TempData["Error"]
+            </div>
+        }
+        @if (TempData["Success"] != null)
+        {
+            <div class="toast"  id="success-toast" style="background-color: greenyellow; position: absolute; height: 40px; margin-left: 500px; margin-top: 20px; color: white; border-radius: 10px; display: flex; justify-content: center; align-content: center; align-items: center; padding: 0px 5px" >
+                @TempData["Success"]
+            </div>
+        }
+        <header>
+            <div class="logo">
+                <img src="~/wwwroot/Images/Logo.png" alt="" />
+            </div>
+            <div class="Navigation">
+                <div class="menu">
+                    <ul class="MenuMainPage">
+                        <li>
+                            <img src="~/wwwroot/Images/MainPage.png" />
+                            <a href="@Url.Action("ReaderHome", "Home")"> Trang chủ</a>
+                        </li>
+                    </ul>
+                </div>
+                @using (Html.BeginForm("Search", "Document", FormMethod.Get, new { @class = "Search" }))
+                {
+                    <input class="SearchDocuments"
+                           type="text"
+                           name="keyword"
+                           placeholder="Nhập thông tin cần tìm!" />
+                    <button type="submit" class="btn_Search">
+                        Tìm
+                    </button>
+                }
+            </div>
+        </header>
+        <div class="container">
+
+            <div class="TableInfo">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Mã tài liệu</th>
+                            <th>Tên tài liệu</th>
+                            <th>Nhà xuất bản</th>
+                            <th>Phí đảm bảo/quyển</th>
+                            <th>Số lượng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.TaiLieuList != null && Model.TaiLieuList.Any())
+                        {
+                            int STT = 1;
+                            foreach (var item in Model.TaiLieuList)
+                            {
+                                <tr>
+                                    <td>@STT</td>
+                                    <td>@item.MATAILIEU</td>
+                                    <td>@item.TENSACH</td>
+                                    <td>@item.NXB</td>
+                                    <td>@item.PHIMUON</td>
+                                    <td>@item.SOLUONG</td>
+                                </tr>
+                                STT++;
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="6">Không có dữ liệu</td></tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="borrowBook">
+                @using (Html.BeginForm("Borrow", "Document", FormMethod.Post))
+                {
+                    <div class="task">
+                        <div class="InputInfo">
+                            <input type="text"
+                                   id="MaTL"
+                                   name="MaTL"
+                                   placeholder="Nhập mã tài liệu" />
+                            <input type="text" id="SL" name="SL" placeholder="Số lượng" />
+                        </div>
+                        <button type="submit" class="btn_Borrow">Đăng ký mượn</button>
+                    </div>
+
+                }
+                <div class="TableBorrow">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Mã tài liệu</th>
+                                <th>Tên tài liệu</th>
+                                <th>Nhà xuất bản</th>
+                                <th>Trạng thái</th>
+                                <th>Số lượng</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                var Database = new Library_Management.Models.QUANLYTHUVIENEntities();
+                                var userID = Session["MANGUOIDUNG"].ToString();
+                                var theID = Database.THEBANDOCs.FirstOrDefault(t => t.MATHANHVIEN == userID);
+                                var list = (from ct in Database.CHITIETDATTRUOCs
+                                            join t in Database.TAILIEUx on ct.MATAILIEU equals t.MATAILIEU
+                                            join m in Database.DATMUONTRUOCs on ct.MAMUON equals m.MAMUON
+                                            join the in Database.THEBANDOCs on m.MASOTHE equals the.MASOTHE
+                                            where the.MASOTHE == theID.MASOTHE
+                                            select new
+                                            {
+                                                MaTaiLieu = ct.MATAILIEU,
+                                                TenSach = t.TENSACH,
+                                                NXB = t.NXB,
+                                                TRANGTHAI = m.TRANGTHAI,
+                                                SOLUONG = (int)ct.SOLUONG,
+                                                MAMUON = ct.MAMUON
+                                            }).ToList();
+
+                                int stt = 1;
+                                foreach (var item in list)
+                                {
+                                                        <tr>
+                                                            <td>@stt</td>
+                                                            <td>@item.MaTaiLieu</td>
+                                                            <td>@item.TenSach</td>
+                                                            <td>@item.NXB</td>
+                                                            <td style="position:relative">@item.TRANGTHAI <button class="cancel-btn" data-ma="@item.MaTaiLieu" data-mamuon="@item.MAMUON">Xóa</button></td>
+                                                            <td>@item.SOLUONG</td>
+                                                        </tr>
+                                        stt++;
+                                    }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <script src="@Url.Content("~/wwwroot/JS/jquery-3.3.1.min.js")"></script>
+        <script>
+            $(document).ready(function () {
+                $(".TableInfo tbody tr").click(function () {
+                    var MaTL = $(this).find("td:eq(1)").text().trim();
+
+                    $("#MaTL").val(MaTL);
+                    $("#SL").val(1);
+                });
+            });
+            //
+            setTimeout(function () {
+                $("#error-toast").fadeOut("slow");
+                $("#success-toast").fadeOut("slow");
+            }, 4000);
+
+            //xóa
+            $(".cancel-btn").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                if (!confirm("Bạn có chắc muốn hủy đặt tài liệu này không?")) return;
+
+                var maTL = $(this).data("ma");
+                var maMuon = $(this).data("mamuon");
+
+                $.ajax({
+                    url: '/Document/HuyDatTruoc',
+                    type: 'POST',
+                    data: { maTaiLieu: maTL, maMuon: maMuon },
+                    success: function (res) {
+                        if (res.success) {
+                            $(this).closest("tr").remove();
+                            alert("Xóa thành công!");
+                            location.reload();
+                        } else {
+                            alert("Lỗi: " + res.message);
+                        }
+                    },
+                    error: function () {
+                        alert("Đã xảy ra lỗi khi gửi yêu cầu.");
+                    }
+                });
+            });
+
+        </script>
+        <script src="@Url.Content("~/wwwroot/JS/BorrowDocuments.js")"></script>
+    </body>
+</html>
+

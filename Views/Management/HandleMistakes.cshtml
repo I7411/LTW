@@ -1,0 +1,291 @@
+﻿
+@{
+    ViewBag.Title = "HandleMistakes";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/wwwroot/css/ReaderManagement.css" />
+    <link rel="stylesheet" href="~/wwwroot/css/MainPage_Admin.css" />
+    <title>Handle Mistakes</title>
+    <style>
+        tr td:first-child {
+            width: 150px;
+        }
+
+        tr {
+            border: solid 1px;
+        }
+
+        #add table {
+            background-color: lightgray;
+            border: none
+        }
+
+        #add {
+            padding: 10px;
+            border: solid 1px black;
+        }
+
+            #add td {
+                height: 30px;
+            }
+
+            #add h3 {
+                font-size: 30px;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+        #add input {
+            background-color: lightgray;
+            color: #003087;
+            font-size: 15px;
+            border: none;
+        }
+
+        .Info table tbody tr:hover{
+            background-color:lightskyblue;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <div class="imgTitle"><img src="~/wwwroot/Images/Logo.png" alt="" /></div>
+            <div class="titleHeader">
+                <strong>
+                    <img src="~/wwwroot/Images/book.png" alt="" />HỌC HẾT SỨC - CHƠI
+                    HẾTMÌNH
+                </strong>
+            </div>
+        </div>
+        <div style="height: 50px;" class="navigation"></div>
+    </header>
+    <div id="add">
+        <button style="float: right;" onclick="closeForm()"><img src="~/wwwroot/Images/EXIST.png"></button>
+        <h3 id="title">THÔNG TIN VI PHẠM</h3>
+        <form>
+            <table>
+                <tr>
+                    <td><strong>Mã độc giả:</strong></td>
+                    <td><input type="text" name="ma" disabled /></td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Tên độc giả:</strong>
+                    </td>
+                    <td><input type="text" name="ten" disabled /></td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Vai trò:</strong>
+                    </td>
+                    <td><input type="text" name="vaitro" disabled /></td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Lý do vi phạm:</strong>
+                    </td>
+                    <td><input type="text" name="vipham" disabled /></td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Số lần:</strong>
+                    </td>
+                    <td><input type="text" name="solan" disabled /></td>
+                </tr>
+
+            </table>
+        </form>
+    </div>
+
+    <div class="containerManagement">
+        <h3>XỬ LÝ VI PHẠM</h3>
+        <div class="nav">
+            <div class="large">
+                <div class="small">
+                    <button type="button" id="Add"><img src="~/wwwroot/Images/ADD.png"> <span>Thêm</span></button>
+                    <button type="button" id="Delete"><img src="~/wwwroot/Images/EXIST.png"><span> Xóa</span></button>
+                    <button type="button" onclick="showForm()"><img src="~/wwwroot/Images/INFO.png"> <span>Thông tin</span></button>
+                    <button type="button" onclick="location.href = '@Url.Action("LibrarianHome","Home")'"><img src="~/wwwroot/Images/EXIST.png"><span>Thoát</span></button>
+                </div>
+            </div>
+        </div>
+        <div class="Info">
+            <table>
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>MÃ ĐỘC GIẢ</th>
+                        <th>TÊN ĐỘC GIẢ</th>
+                        <th>LÍ DO VI PHẠM</th>
+                        <th>SỐ LẦN VI PHẠM</th>
+                        <th>TÌNH TRẠNG</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                        </td>
+                        <td>
+                            <div class="Request"><input type="text" id="Maphat" /> <button type="submit"><img src="~/wwwroot/Images/loc.png"></button></div>
+                        </td>
+                        <td>
+                            <div class="Request"><input type="text" id="TenDG" /> <button type="submit"><img src="~/wwwroot/Images/loc.png"></button></div>
+                        </td>
+                        <td>
+                            <div class="Request"><input type="text" id="lido" /> <button type="submit"><img src="~/wwwroot/Images/loc.png"></button></div>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                            <div class="Request"><input type="text" id="tinhtrang" /> <button type="submit"><img src="~/wwwroot/Images/loc.png"></button></div>
+                        </td>
+                    </tr>
+                    @{
+                        var db = new Library_Management.Models.QUANLYTHUVIENEntities();
+                        var list = (
+                            from ph in db.PHIEUPHATs
+                            join m in db.PHIEUMUONs on ph.MAPHIEUMUON equals m.MAPHIEUMUON
+                            join the in db.THEBANDOCs on m.MASOTHE equals the.MASOTHE
+                            join doc in db.DOCGIAs on the.MATHANHVIEN equals doc.MATHANHVIEN
+                            select new
+                            {
+                                maDocGia = the.MASOTHE,
+                                tenDocGia = doc.TENTV,
+                                liDo = ph.LYDO,
+                                soLan = ph.SOLAN,
+                                tg = ph.NGTAO,
+                                tt = ph.TINHTRANGTAILIEU
+                            }
+                            ).ToList();
+                        int stt = 1;
+                        foreach (var item in list)
+                        {
+                            <tr style="text-align:center">
+                                <td>@stt</td>
+                                <td>@item.maDocGia</td>
+                                <td>@item.tenDocGia</td>
+                                <td>@item.liDo</td>
+                                <td>@item.soLan</td>
+                                <td>@item.tt</td>
+                            </tr>
+                            stt++;
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="@Url.Content("~/wwwroot/JS/jquery-3.3.1.min.js")"></script>
+
+    <script src="~/wwwroot/JS/ReaderManagement.js">
+    </script>
+    <script>
+
+
+        $("#Add").click(function () {
+            var maThe = $("#Maphat").val();
+            var liDo = $("#lido").val();
+            var tinhtrang = $("#tinhtrang").val();
+            if (!maThe) return alert("Vui lòng nhập mã thẻ");
+            if (!liDo) return alert("Vui lòng nhập lý do vi phạm");
+            if (!tinhtrang) return alert("Vui lòng nhập tình trạng tài liệu");
+            $.post("/Management/Add", { MaThe: maThe, LiDo: liDo, tinhtrang: tinhtrang  }, function (res) {
+                if (res.success) {
+                    alert("Thêm thành công!");
+                    location.reload();
+                } else {
+                    alert("Lỗi: " + res.message);
+                }
+            });
+        });
+        $("#Delete").click(function () {
+            var maThe = $("#Maphat").val();
+            var liDo = $("#lido").val();
+
+            if (!maThe) return alert("Vui lòng nhập mã thẻ");
+            if (!liDo) return alert("Vui lòng nhập lý do vi phạm");
+
+            $.post("/Management/Delete", { MaThe: maThe, LiDo: liDo }, function (res) {
+                if (res.success) {
+                    alert("Xóa thành công!");
+                    location.reload();
+                } else {
+                    alert("Lỗi: " + res.message);
+                }
+            });
+        });
+
+  $(document).ready(function () {
+        $("#add").hide();
+
+        $(".Info tbody tr").not(":first").click(function () {
+            var ma = $(this).find("td:eq(1)").text().trim(); // Mã độc giả
+
+            $.ajax({
+                url: '@Url.Action("GetInfo", "Management")',
+                type: 'GET',
+                data: { ma: ma },
+                success: function (data) {
+                    if (data) {
+                        $("#add input[name='ma']").val(data.maDocGia);
+                        $("#add input[name='ten']").val(data.tenDocGia);
+                        $("#add input[name='vaitro']").val(data.vaitro);
+                        $("#add input[name='vipham']").val(data.liDo);
+                        $("#add input[name='solan']").val(data.soLan);
+
+                        $("#add").show();
+                    } else {
+                        alert("Không tìm thấy thông tin phiếu!");
+                    }
+                },
+                error: function () {
+                    alert("Lỗi khi lấy dữ liệu!");
+                }
+            });
+        });
+
+        $(".Info tbody tr").not(':first').click(function () {
+            var MaTL = $(this).find("td:eq(1)").text().trim();
+            var ten = $(this).find("td:eq(2)").text().trim();
+            var lido = $(this).find("td:eq(3)").text().trim();
+            var tt = $(this).find("td:eq(5)").text().trim();
+
+
+            $("#Maphat").val(MaTL);
+            $("#TenDG").val(ten);
+            $("#lido").val(lido);
+            $("#tinhtrang").val(tt);
+        });
+  });
+            function showForm() {
+                var form = document.getElementById("add");
+                if (form) {
+                    form.style.display = "block";
+                }
+            }
+
+            function closeForm() {
+                var form = document.getElementById("add");
+                if (form) {
+                    form.style.display = "none";
+                }
+            }
+
+            function getFormData() {
+                return {
+                    MaThe: $("#Maphat").val(),
+                    HoTen: $("#TenDG").val(),
+                    DiaChi: $("#lido").val(),
+                    VaiTro: $("#role").val(),
+                };
+            }
+    </script>
+</body>
+</html>
+
+
