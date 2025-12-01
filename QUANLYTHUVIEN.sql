@@ -221,9 +221,9 @@ INSERT INTO DOCGIA (
     TAIKHOAN, MATKHAU, VAITRO, DIACHI, TENTRUONG, KHOAHOC, EMAIL, GHICHU
 ) VALUES
 ('TV001', N'Nguyễn Minh An', '1999-05-10', N'Nam', N'Quản trị hệ thống', '0905123456',
- 'adminan', '123456', N'Admin', N'Q5, TP.HCM', N'ĐH KHTN', 'K17', 'admin@gmail.com', N'Quản trị viên'),
+ 'minhan', '123456', N'Docgia', N'Q5, TP.HCM', N'ĐH KHTN', 'K17', 'admin@gmail.com', N'Quản trị viên'),
 ('TV002', N'Lê Thị Hoa', '2001-08-22', N'Nữ', N'Thủ thư thư viện', '0987987654',
- 'hoale', 'abc123', N'Thủ thư', N'Tân Bình, TP.HCM', N'ĐH Sư phạm', 'K15', 'thu_thu@gmail.com', N'Phụ trách mượn trả'),
+ 'hoadephai', 'abc123', N'Docgia', N'Tân Bình, TP.HCM', N'ĐH Sư phạm', 'K15', 'thu_thu@gmail.com', N'Phụ trách mượn trả'),
 ('TV003', N'Trần Quốc Bảo', '2003-03-14', N'Nam', N'Sinh viên', '0977123456',
  'baotran', 'pass789', N'Độc giả', N'Q10, TP.HCM', N'THPT LHP', '12A1', 'bao@gmail.com', N'Bạn đọc thường xuyên');
 
@@ -235,7 +235,7 @@ INSERT INTO THEBANDOC VALUES
 
 -- BẢNG NHÂN VIÊN
 INSERT INTO NHANVIEN VALUES
-('NV001', NULL, N'Nguyễn Minh An', '1999-05-10', N'Nam', 'admin@gmail.com', '0905123456', N'Admin', N'Q5, TP.HCM', 'adminan', '123456'),
+('NV001', NULL, N'Nguyễn Minh Anh', '1999-05-10', N'Nam', 'admin@gmail.com', '0905123456', N'Admin', N'Q5, TP.HCM', 'adminan', '123456'),
 ('NV002', 'NV001', N'Lê Thị Hoa', '2001-08-22', N'Nữ', 'thu_thu@gmail.com', '0987987654', N'Thủ thư', N'Tân Bình, TP.HCM', 'hoale', 'abc123'),
 ('NV003', 'NV001', N'Phạm Quốc Việt', '1990-11-09', N'Nam', 'vietpq@lib.vn', '0987654321', N'Nhân viên', N'TP.HCM', 'vietpq', '789123');
 
@@ -438,27 +438,3 @@ FOREIGN KEY (MANV) REFERENCES NHANVIEN (MANV);
 ALTER TABLE NHANVIEN
 ADD CONSTRAINT FK_NHANVIEN____UOC_QU_NHANVIEN
 FOREIGN KEY (NQL_NV) REFERENCES NHANVIEN (MANV);
-
-
-
-
--- SELECT ALL TABLE
-SELECT * FROM CAPNHATTHONGTIN
-SELECT * FROM CHITIETDATTRUOC
-SELECT * FROM CHITIETPHIEUMUON
-SELECT * FROM DATMUONTRUOC
-SELECT * FROM DATPHONG
-SELECT * FROM DOCGIA
-SELECT * FROM GIAHANTAILIEU
-SELECT * FROM MUATAILIEUMOI
-SELECT * FROM NHANPHONG
-SELECT * FROM NHANVIEN
-SELECT * FROM PHIEUMUON
-SELECT * FROM PHIEUPHAT
-SELECT * FROM PHONGHOC
-SELECT * FROM QUANLYTAILIEU
-SELECT * FROM sysdiagrams
-SELECT * FROM TAILIEU
-SELECT * FROM THANHLYTAILIEU
-SELECT * FROM THEBANDOC
-SELECT * FROM XULYGIAHAN
