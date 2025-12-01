@@ -1,0 +1,526 @@
+﻿@model Library_Management.Models.reader
+@{
+    ViewBag.Title = "ReaderManagement";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/wwwroot/css/ReaderManagement.css" />
+    <link rel="stylesheet" href="~/wwwroot/css/MainPage_Admin.css" />
+    <title>Reader Management</title>
+    <link rel="icon" type="image/png" href="~/wwwroot/Images/logoCongThuong.png" />
+    <style>
+        .Info table tbody :hover {
+            background-color: deepskyblue;
+        }
+        /**/
+        #update {
+            display: none;
+            position: absolute;
+            width: 60%;
+            z-index: 100;
+            background-color: white;
+            background-color: whitesmoke;
+            padding: 10px;
+            margin: auto;
+            margin-left: 100px;
+            border-radius: 10px;
+        }
+
+            #update h3 {
+                text-align: center;
+            }
+
+            #update td {
+                border: none;
+            }
+
+            #update table {
+                border: 15px solid lightgray;
+            }
+
+            #update button img {
+                width: 15px;
+                height: 15px;
+            }
+        /**/
+        #info {
+            display: none;
+            position: absolute;
+            width: 60%;
+            z-index: 50;
+            background-color: white;
+            background-color: whitesmoke;
+            padding: 10px;
+            margin: auto;
+            margin-left: 100px;
+            border-radius: 10px;
+        }
+
+            #info h3 {
+                text-align: center;
+            }
+
+            #info td {
+                border: none;
+            }
+
+            #info table {
+                border: 15px solid lightgray;
+            }
+
+            #info button img {
+                width: 15px;
+                height: 15px;
+            }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <div class="imgTitle"><img src="~/wwwroot/Images/Logo.png" alt="" /></div>
+            <div class="titleHeader">
+                <strong>
+                    <img src="~/wwwroot/Images/book.png" alt="" />HỌC HẾT SỨC - CHƠI
+                    HẾTMÌNH
+                </strong>
+            </div>
+        </div>
+        <div style="height: 50px;" class="navigation"></div>
+    </header>
+    @if (TempData["Notice"] != null)
+    {
+        <div id="Notice" style="display: flex; align-items: center; justify-content: center;
+                            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+                            padding: 10px 20px; color: white; background-color: red;
+                            height: auto; max-width: 90%; z-index: 10000000;
+                            border-radius: 5px; font-weight: bold;">
+            @TempData["Notice"]
+        </div>
+    }
+
+<div id="add">
+
+    <h3>Thêm độc giả</h3>
+    @using (Html.BeginForm("AddMember", "Management", FormMethod.Post, new { id = "formInput" }))
+    {
+        @Html.AntiForgeryToken()
+        <table>
+            <tr>
+                <td colspan="1">Tên độc giả</td>
+                <td colspan="5"><input type="text" name="HoTen"></td>
+            </tr>
+            <tr>
+                <td colspan="1">Mã độc giả</td>
+                <td colspan="5"><input type="text" name="MaSo"></td>
+
+            </tr>
+            <tr>
+                <td colspan="1">Ngày sinh </td>
+                <td colspan="2"><input type="date" name="NgaySinh"></td>
+                <td colspan="1">Giới tính</td>
+                <td colspan="2">
+                    <select name="Gioitinh" id="gender" style="width: 90%;">
+                        <option value="male">Nam</option>
+                        <option value="female">Nữ</option>
+                        <option value="different">Khác</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="1">Chức vụ <span style="color: red;">(*)</span> </td>
+                <td colspan="2">
+                    <select id="position"  name="Chucvu">
+                        <option value="Students">Sinh viên</option>
+                        <option value="Lecturer">Giảng viên</option>
+                        <option value="ExternalReaders">Độc giả ngoài</option>
+                    </select>
+                </td>
+                <td colspan="1">Mật khẩu</td>
+                <td colspan="2"><input type="text" name="MatKhau"></td>
+            </tr>
+            <tr>
+                <td colspan="1">Ghi chú</td>
+                <td colspan="2"><input type="text" id="faculty" name="GHICHU"></td>
+                <td colspan="1">Nhập lại mật khẩu</td>
+                <td colspan="2"><input type="text" id="class" name="NhapLaiMatKhau"></td>
+            </tr>
+            <tr>
+                <td colspan="1">Số điện thoại</td>
+                <td colspan="5"><input type="text" name="DienThoai"></td>
+
+            </tr>
+            <tr>
+                <td colspan="1">Email</td>
+                <td colspan="5"><input type="text" name="Email"></td>
+            </tr>
+            <tr>
+                <td colspan="1">Địa chỉ</td>
+                <td colspan="5"><input type="text" name="Diachi"></td>
+
+            </tr>
+        </table>
+        <div class="btn"><button type="submit"><img src="~/wwwroot/Images/check.png" alt=""><span> Lưu</span></button> <button type="button" onclick="closeFormAdd()"><img src="~/wwwroot/Images/EXIST.png" alt=""><span>Hủy bỏ</span></button> </div>
+    }
+</div>
+<div id="update">
+
+    <h3>Chỉnh sửa thông tin độc giả</h3>
+    @using (Html.BeginForm("Update", "Management", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <table>
+            <tr>
+                <td colspan="1">Tên độc giả</td>
+                <td colspan="5"><input type="text" name="HoTen"></td>
+            </tr>
+            <tr>
+                <td colspan="1">Mã độc giả</td>
+                <td colspan="5"><input type="text" name="MaSo"></td>
+
+            </tr>
+            <tr>
+                <td colspan="1">Ngày sinh </td>
+                <td colspan="2"><input type="date" name="NgaySinh"></td>
+                <td colspan="1">Giới tính</td>
+                <td colspan="2">
+                    <select name="Gioitinh" id="gender" style="width: 90%;">
+                        <option value="male">Nam</option>
+                        <option value="female">Nữ</option>
+                        <option value="different">Khác</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="1">Chức vụ <span style="color: red;">(*)</span> </td>
+                <td colspan="2">
+                    <select id="position" name="Chucvu">
+                        <option value="Students">Sinh viên</option>
+                        <option value="Lecturer">Giảng viên</option>
+                        <option value="ExternalReaders">Độc giả ngoài</option>
+                    </select>
+                </td>
+                <td colspan="1">Tài khoản</td>
+                <td colspan="2"><input type="text" name="taikhoan" disabled></td>
+            </tr>
+            <tr>
+                <td colspan="1">Ghi chú</td>
+                <td colspan="2"><input type="text" id="faculty" name="GHICHU"></td>
+                <td colspan="1">Mật khẩu</td>
+                <td colspan="2"><input type="text" id="class" name="MatKhau"></td>
+            </tr>
+            <tr>
+                <td colspan="1">Số điện thoại</td>
+                <td colspan="5"><input type="text" name="DienThoai"></td>
+
+            </tr>
+            <tr>
+                <td colspan="1">Email</td>
+                <td colspan="5"><input type="text" name="Email"></td>
+            </tr>
+            <tr>
+                <td colspan="1">Địa chỉ</td>
+                <td colspan="5"><input type="text" name="Diachi"></td>
+
+            </tr>
+        </table>
+
+        <div class="btn">
+            <button type="submit"><img src="~/wwwroot/Images/check.png" alt="" /><span> Lưu</span></button>
+            <button type="button" onclick="closeFormupdate()"><img src="~/wwwroot/Images/EXIST.png" alt="" /><span> Hủy bỏ</span></button>
+        </div>
+    }
+</div>
+
+    <div id="info">
+
+        <h3>Thông tin độc giả</h3>
+            <table>
+                <tr>
+                    <td colspan="1">Tên độc giả</td>
+                    <td colspan="5"><input type="text" name="HOTEN" ></td>
+                </tr>
+                <tr>
+                    <td colspan="1">Mã độc giả</td>
+                    <td colspan="5"><input type="text" name="MATV"></td>
+
+                </tr>
+                <tr>
+                    <td colspan="1">Ngày sinh </td>
+                    <td colspan="2"><input type="date" name="NGSINH"></td>
+                    <td colspan="1">Giới tính</td>
+                    <td colspan="2">
+                        <select name="GIOITINH" id="gender" style="width: 90%;">
+                            <option value="male">Nam</option>
+                            <option value="female">Nữ</option>
+                            <option value="different">Khác</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="1">Chức vụ <span style="color: red;">(*)</span> </td>
+                    <td colspan="2">
+                        <select id="position" >
+                            <option value="Students">Sinh viên</option>
+                            <option value="Lecturer">Giảng viên</option>
+                            <option value="ExternalReaders">Độc giả ngoài</option>
+                        </select>
+                    </td>
+                    <td colspan="1">Tài khoản</td>
+                    <td colspan="2"><input type="text" name="TAIKHOAN"></td>
+                </tr>
+                <tr>
+                    <td colspan="1">Ghi chú</td>
+                    <td colspan="2"><input type="text" id="faculty" name="GHICHU"></td>
+                    <td colspan="1">Mật khẩu</td>
+                    <td colspan="2"><input type="text" id="class" name="MATKHAU"></td>
+                </tr>
+                <tr>
+                    <td colspan="1">Số điện thoại</td>
+                    <td colspan="5"><input type="text" name="SDT"></td>
+
+                </tr>
+                <tr>
+                    <td colspan="1">Email</td>
+                    <td colspan="5"><input type="text" name="EMAIL"></td>
+                </tr>
+                <tr>
+                    <td colspan="1">Địa chỉ</td>
+                    <td colspan="5"><input type="text" name="DC"></td>
+
+                </tr>
+            </table>
+            <div class="btn"> <button type="button" onclick="closeFormInfo()"><img src="~/wwwroot/Images/EXIST.png" alt=""><span>Hủy bỏ</span></button> </div>
+    </div>
+
+    <div class="containerManagement">
+        <h3>QUẢN LÝ THÀNH VIÊN</h3>
+        <div class="nav">
+            <div class="large">
+                <div class="small">
+                    <button type="submit" onclick="showFormAdd()"><img src="~/wwwroot/Images/ADD.png"> <span>Thêm</span></button>
+                        <button type="button" onclick="showFormUpdate()"><img src="~/wwwroot/Images/UPDATE.png"> <span>Sửa</span></button>
+                    @using (Html.BeginForm("DeleteReader", "Management", FormMethod.Post))
+                    {
+                        @Html.Hidden("id", "", new { id = "selectedID" })
+                        <button type="submit" onclick="return confirm('Bạn có chắc muốn xóa không?')"><img src="~/wwwroot/Images/EXIST.png"><span> Xóa</span></button>
+                    }
+                    <button type="submit" onclick="showFormInfo()"><img src="~/wwwroot/Images/INFO.png"> <span>Thông tin</span></button>
+                    <button type="submit" onclick="location.href = '@Url.Action("LibrarianHome","Home")'"><img src="~/wwwroot/Images/EXIST.png"><span>Thoát</span></button>
+                </div>
+            </div>
+        </div>
+        <div class="Info">
+            <table>
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>MÃ ĐỘC GIẢ</th>
+                        <th>TÊN ĐỘC GIẢ</th>
+                        <th>NGÀY SINH</th>
+                        <th>VAI TRÒ</th>
+                    </tr>
+                </thead>
+                <tbody style="text-align:center">
+                    <tr>
+                        <td>
+                        </td>
+                        <td>
+                            <div class="Request"><input type="text" id="edit_code"> <button type="submit"><img src="~/wwwroot/Images/loc.png"></button></div>
+                        </td>
+                        <td>
+                            <div class="Request"><input type="text" id="edit_name"> <button type="submit"><img src="~/wwwroot/Images/loc.png"></button></div>
+                        </td>
+                        <td>
+                            <div class="Request"><input type="text" id="edit_birth"> <button type="submit"><img src="~/wwwroot/Images/loc.png"></button></div>
+                        </td>
+                        <td>
+                            <div class="Request"><input type="text" id="edit_job"> <button type="submit"><img src="~/wwwroot/Images/loc.png"></button></div>
+                        </td>
+                    </tr>
+                    @{
+                        var Database = new Library_Management.Models.QUANLYTHUVIENEntities();
+                        var d = Database.DOCGIAs;
+                        int stt = 1;
+                        foreach (var item in d)
+                        {
+                            <tr>
+                                <td>@stt</td>
+                                <td>@item.MATHANHVIEN</td>
+                                <td>@item.TENTV</td>
+                                <td>@(item.NGSINH.HasValue ? item.NGSINH.Value.ToString("dd/MM/yyyy") : "")</td>
+                                <td>@item.NGHENGHIEP</td>
+                            </tr>
+                            stt++;
+                        }
+
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="@Url.Content("~/wwwroot/JS/jquery-3.3.1.min.js")"></script>
+    <script>
+        //Event click
+        $(document).ready(function () {
+            console.log("jQuery ready!");
+            $(".Info tbody tr").not(':first').click(function () {
+                var code = $(this).find("td:eq(1)").text().trim();
+                var name = $(this).find("td:eq(2)").text().trim();
+                var birth = $(this).find("td:eq(3)").text().trim();
+                var job = $(this).find("td:eq(4)").text().trim();
+
+
+                $("#edit_code").val(code);
+                $("#edit_birth").val(birth);
+                $("#edit_name").val(name);
+                $("#edit_job").val(job);
+                $("#selectedID").val(code);
+                $("#UpdateID").val(code);
+                $("#userID").val(code);
+
+
+            });
+        });
+        //Thời gian ẩn thông báo
+        setTimeout(function () {
+            var alert = document.getElementById('Notice');
+            if (alert) {
+                alert.style.display = 'none';
+            }
+        }, 3000);
+        //Báo lỗi
+        const form = document.getElementById("formInput");
+
+        const maso = document.querySelector('input[name="MaSo"]');
+        const hoten = document.querySelector('input[name="HoTen"]');
+        const mk = document.querySelector('input[name="MatKhau"]');
+        const lmk = document.querySelector('input[name="NhapLaiMatKhau"]');
+        const ngaysinh = document.querySelector('input[name="NgaySinh"]');
+        const gioiTinhSelect = document.querySelector('select[name="Gioitinh"]');
+
+        form.addEventListener("submit", function (event) {
+            let errors = [];
+
+            if (!maso.value || (maso.value.length !== 10 && maso.value.length !== 13)) {
+                errors.push("Mã số không được để trống và phải có độ dài 10 hoặc 13 ký tự");
+                maso.style.border = "3px solid red";
+            } else {
+                maso.style.border = "";
+            }
+
+            if (!hoten.value) {
+                errors.push("Họ và tên không được để trống");
+                hoten.style.border = "3px solid red";
+            } else {
+                hoten.style.border = "";
+            }
+
+            if (!ngaysinh.value) {
+                errors.push("Ngày sinh không được để trống");
+                ngaysinh.style.border = "3px solid red";
+            } else {
+                ngaysinh.style.border = "";
+            }
+
+            if (!gioiTinhSelect.value) {
+                errors.push("Giới tính không được để trống");
+                gioiTinhSelect.style.border = "3px solid red";
+            } else {
+                gioiTinhSelect.style.border = "";
+            }
+
+            if (!mk.value) {
+                errors.push("Mật khẩu không được để trống");
+                mk.style.border = "3px solid red";
+            } else {
+                mk.style.border = "";
+            }
+
+            if (lmk.value !== mk.value) {
+                errors.push("Mật khẩu nhập lại không khớp");
+                lmk.style.border = "3px solid red";
+            } else {
+                lmk.style.border = "";
+            }
+
+            if (errors.length > 0) {
+                event.preventDefault();
+                alert(errors.join("\n"));
+            }
+        });
+        $(document).ready(function () {
+    $(".Info tbody tr").not(':first').click(function () {
+        var code = $(this).find("td:eq(1)").text().trim();
+        //Gán dữ liệu Info
+        $.ajax({
+            url: '@Url.Action("GetReaderInfo", "Management")',
+            type: 'GET',
+            data: { id: code },
+            success: function (data) {
+                if (data) {
+                    $("#info input[name='HOTEN']").val(data.HoTen);
+                    $("#info input[name='MATV']").val(data.MaSo);
+                    $("#info input[name='NGSINH']").val(data.NgaySinh);
+                    $("#info select[name='GIOITINH']").val(data.GioiTinh);
+                    $("#info select[name='position']").val(data.ChucVu);
+                    $("#info input[name='SDT']").val(data.DienThoai);
+                    $("#info input[name='EMAIL']").val(data.Email);
+                    $("#info input[name='DC']").val(data.DiaChi);
+                    $("#info input[name='GHICHU']").val(data.GhiChu);
+                    $("#info input[name='TAIKHOAN']").val(data.MaSo);
+                    $("#info input[name='MATKHAU']").val(data.MatKhau);
+                    $("#info").show();
+                } else {
+                    alert("Không tìm thấy thông tin độc giả!");
+                }
+            },
+            error: function () {
+                alert("Lỗi khi lấy dữ liệu!");
+            }
+        });
+    });
+});
+
+            $(".Info tbody tr").not(':first').click(function () {
+        var code = $(this).find("td:eq(1)").text().trim();
+        //Gán dữ liệu Info
+        $.ajax({
+            url: '@Url.Action("GetReaderInfo", "Management")',
+            type: 'GET',
+            data: { id: code },
+            success: function (data) {
+                if (data) {
+                    $("#update input[name='HoTen']").val(data.HoTen);
+                    $("#update input[name='MaSo']").val(data.MaSo);
+                    $("#update input[name='NgaySinh']").val(data.NgaySinh);
+                    $("#update select[name='GioiTinh']").val(data.GioiTinh);
+                    $("#update select[name='ChucVu']").val(data.ChucVu);
+                    $("#update input[name='DienThoai']").val(data.DienThoai);
+                    $("#update input[name='Email']").val(data.Email);
+                    $("#update input[name='Diachi']").val(data.DiaChi);
+                    $("#update input[name='GhiChu']").val(data.GhiChu);
+                    $("#update input[name='taikhoan']").val(data.MaSo);
+                    $("#update input[name='MatKhau']").val(data.MatKhau);
+
+                } else {
+                    alert("Không tìm thấy thông tin độc giả!");
+                }
+            },
+            error: function () {
+                alert("Lỗi khi lấy dữ liệu!");
+            }
+        });
+    });
+
+    </script>
+    <script src="~/wwwroot/JS/ReaderManagement.js">
+    </script>
+
+</body>
+</html>
+
+

@@ -1,0 +1,269 @@
+﻿
+@{
+    ViewBag.Title = "Documents";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/wwwroot/css/ReaderManagement.css" />
+    <link rel="stylesheet" href="~/wwwroot/css/MainPage_Admin.css" />
+    <link rel="stylesheet" href="~/wwwroot/css/DocumentsAndClassRooms.css">
+    <title>Documents and ClassRooms Management</title>
+    <link rel="icon" type="image/png" href="~/wwwroot/Images/logoCongThuong.png" />
+    <style>
+        .tableInfo table {
+            width: 100%;
+        }
+
+        table td {
+            text-align: center;
+        }
+
+        table tbody td button {
+            background-color: gray;
+        }
+
+            table tbody td button:hover {
+                background-color: lightblue;
+            }
+
+        #requestDocuments input {
+            background-color: lightgray;
+            color: #003087;
+            font-size: 15px;
+            border: none;
+        }
+
+        #requestDocuments tr:hover {
+            background-color: lightskyblue;
+        }
+
+        .InfoClassrooms tr:hover {
+            background-color: lightskyblue;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <div class="imgTitle"><img src="~/wwwroot/Images/Logo.png" alt="" /></div>
+            <div class="titleHeader">
+                <strong>
+                    <img src="~/wwwroot/Images/book.png" alt="" />HỌC HẾT SỨC - CHƠI
+                    HẾTMÌNH
+                </strong>
+            </div>
+        </div>
+        <div style="height: 50px;" class="navigation"></div>
+    </header>
+    @if (TempData["Notice"] != null)
+    {
+        <div id="Notice" style="display: flex; align-items: center; justify-content: center;
+                            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+                            padding: 10px 20px; color: white; background-color: red;
+                            height: auto; max-width: 90%; z-index: 10000000000;
+                            border-radius: 5px; font-weight: bold;">
+            @TempData["Notice"]
+        </div>
+    }
+
+    <div id="requestDocuments">
+        <h2>THÔNG TIN PHIẾU YÊU CẦU</h2>
+       @using (Html.BeginForm("Accept", "RequiredDocuments", FormMethod.Post)) {
+            <table>
+                <tr>
+                    <td colspan="1">Mã phiếu yêu cầu</td>
+                    <td colspan="5"> <input type="text" name="maGH" readonly /></td>
+                </tr>
+                <tr>
+                    <td colspan="1">Yêu cầu</td>
+                    <td colspan="5"> <input type="text" name="yeucau" disabled /></td>
+                </tr>
+                <tr>
+                    <td colspan="1">Mã độc giả</td>
+                    <td colspan="2"> <input type="text" name="maDocGia" disabled /></td>
+                    <td colspan="1" style="border-right:none;">Mã tài liệu - sách</td>
+                    <td colspan="2" style="border-left: none;"> <input type="text" name="MaTL" disabled /></td>
+                </tr>
+                <tr>
+                    <td colspan="1">Tên độc giả</td>
+                    <td colspan="2"></td>
+                    <td colspan="1" style="border-right:none;">Tên tài liệu - sách</td>
+                    <td colspan="2" style="border-left: none;"> <input type="text" name="TenTL" disabled /></td>
+                </tr>
+                <tr>
+                    <td colspan="1">Vai trò</td>
+                    <td colspan="2"></td>
+                    <td colspan="1" style="border-right:none;">Tác giả</td>
+                    <td colspan="2" style="border-left: none;"> <input type="text" name="tacgia" disabled /></td>
+                </tr>
+                <tr>
+                    <td colspan="1">Khoa</td>
+                    <td colspan="2"> <input type="text" name="Khoa" disabled /></td>
+                    <td colspan="1" style="border-right:none;">Nhà xuất bản</td>
+                    <td colspan="2" style="border-left: none;"> <input type="text" name="NXB" disabled /></td>
+                </tr>
+                <tr>
+                    <td colspan="1">Lớp</td>
+                    <td colspan="2"> <input type="text" name="Lop" disabled /></td>
+                    <td colspan="1" style="border-right:none;">Ngôn ngữ</td>
+                    <td colspan="2" style="border-left: none;"> <input type="text" name="ngonNgu" disabled /></td>
+                </tr>
+                <tr>
+                    <td colspan="1">Số lần gia hạn</td>
+                    <td colspan="5"> <input type="text" name="solan" disabled /></td>
+                </tr>
+                <tr>
+                    <td colspan="1">Ngày mượn</td>
+                    <td colspan="5"> <input type="text" name="ngaymuon" disabled /></td>
+                </tr>
+                <tr>
+                    <td colspan="1">Ngày trả</td>
+                    <td colspan="5"> <input type="text" name="ngaytra" disabled /></td>
+                </tr>
+            </table>
+            <div class="response"><button type="button" onclick="closeForm()">Từ chối</button><button>Đồng ý</button></div>
+       }
+    </div>
+    <div class="containerManagement">
+        <h3>MƯỢN - TRẢ - GIA HẠN</h3>
+        <div class="nav">
+            <div class="large">
+                <div class="small">
+                    <button type="button" onclick="location.href = '@Url.Action("LibrarianHome", "Home")'"><img src="~/wwwroot/Images/EXIST.png"><span>Thoát</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <div class="function">
+            <div class="change">
+                <button type="submit" onclick="showTableDocument()" id="doc">Tài liệu - Sách</button>
+            </div>
+            <div class="Search"><input type="text" id="Search" name="Search" placeholder="Nhập thông tin cần tìm!"><button>Tìm</button></div>
+        </div>
+        <div class="tableInfo">
+            <table>
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Mã tài liệu</th>
+                        <th>Mã độc giả</th>
+                        <th>Yêu cầu</th>
+                        <th>Trạng thái xử lý</th>
+                        <th>Thông tin phiếu</th>
+                    </tr>
+                </thead>
+                <tbody class="InfoClassrooms">
+                    @{
+                        var Database = new Library_Management.Models.QUANLYTHUVIENEntities();
+                        var list = (from p in Database.PHIEUMUONs
+                                    join k in Database.GIAHANTAILIEUx on p.MAPHIEUMUON equals k.MAPHIEUMUON
+                                    join t in Database.CHITIETPHIEUMUONs on p.MAPHIEUMUON equals t.MAPHIEUMUON
+                                    select new
+                                    {
+                                        maTL = t.MATAILIEU,
+                                        maDocGia = p.MASOTHE,
+                                        yeuCau = k.YEUCAU,
+                                        trangThai = k.TRANGTHAI,
+
+                                    }
+                            ).ToList();
+                        int stt = 1;
+                        foreach (var item in list)
+                        {
+                            if (item.yeuCau != null)
+                            {
+                                <tr>
+                                    <td>@stt</td>
+                                    <td>@item.maTL</td>
+                                    <td>@item.maDocGia</td>
+                                    <td>@item.yeuCau</td>
+                                    <td>@item.trangThai</td>
+                                    <td>
+                                        <button onclick="showInfoDocument()">
+                                            thông tin phiếu
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                            stt++;
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <script src="@Url.Content("~/wwwroot/JS/jquery-3.3.1.min.js")"></script>
+    <script>
+$(document).ready(function () {
+    $("#requestDocuments").hide();
+
+    $(".InfoClassrooms").on("click", "button", function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        var $tr = $(this).closest("tr");
+        var maTL = $tr.find("td:eq(1)").text().trim();
+        var maDocGia = $tr.find("td:eq(2)").text().trim();
+
+        $.ajax({
+            url: '@Url.Action("GetDocumentRequestInfo", "RequiredDocuments")',
+            type: 'GET',
+            data: {
+                maTaiLieu: maTL,
+                maDocGia: maDocGia
+            },
+            success: function (data) {
+                if (data) {
+                    let form = $("#requestDocuments form");
+
+                    form.find("input[name='maGH']").val(data.MaPhieu);
+                    form.find("input[name='yeucau']").val(data.YeuCau);
+                    form.find("input[name='maDocGia']").val(data.MaDocGia);
+                    form.find("input[name='MaTL']").val(data.MaTaiLieu);
+                    form.find("input[name='TenTL']").val(data.TenTaiLieu);
+                    form.find("input[name='tacgia']").val(data.TacGia);
+                    form.find("input[name='Khoa']").val(data.Khoa);
+                    form.find("input[name='NXB']").val(data.NhaXuatBan);
+                    form.find("input[name='Lop']").val(data.Lop);
+                    form.find("input[name='ngonNgu']").val(data.NgonNgu);
+                    form.find("input[name='solan']").val(data.SoLanGiaHan);
+                    form.find("input[name='ngaymuon']").val(data.NgayMuon);
+                    form.find("input[name='ngaytra']").val(data.NgayTra);
+
+                    $("#requestDocuments").show();
+                } else {
+                    alert("Không tìm thấy thông tin phiếu yêu cầu!");
+                }
+            },
+            error: function () {
+                alert("Lỗi khi lấy dữ liệu từ máy chủ!");
+            }
+        });
+    });
+
+    // Ẩn thông báo sau 3 giây
+    setTimeout(function () {
+        var alert = document.getElementById('Notice');
+        if (alert) {
+            alert.style.display = 'none';
+        }
+    }, 3000);
+});
+
+function closeForm() {
+    $("#requestDocuments").hide();
+}
+    </script>
+    <script src="~/wwwroot/JS/DocumentsAndClassRooms.js">
+    </script>
+    <script src="~/wwwroot/JS/ReaderManagement.js"></script>
+</body>
+</html>
+

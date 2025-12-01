@@ -1,0 +1,299 @@
+﻿
+@{
+    ViewBag.Title = "CreateLoanForm";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lập Phiếu Mượn</title>
+    <link rel="stylesheet" href="~/wwwroot/css/ReaderManagement.css" />
+    <link rel="stylesheet" href="~/wwwroot/css/MainPage_Admin.css" />
+    <link rel="stylesheet" href="~/wwwroot/css/AccountManagement.css">
+    <link rel="icon" type="image/png" href="~/wwwroot/Images/logoCongThuong.png" />
+    <style>
+        .container {
+            padding: 20px;
+            background-color: #fff;
+            border: 2px solid #007bff;
+        }
+
+            .container table {
+                border: none;
+                width: 80%;
+                border-spacing: 20px;
+            }
+
+                .container table tr td:first-child {
+                    width: 150px;
+                }
+
+                .container table td {
+                    border: none;
+                    height: 50px;
+                }
+
+        .buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+            .buttons button {
+                padding: 10px 20px;
+                margin-right: 10px;
+                background-color: #007bff;
+                color: white;
+                border: none;
+                cursor: pointer;
+                border-radius: 10px;
+            }
+
+                .buttons button:hover {
+                    background-color: #0056b3;
+                }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #ddd;
+        }
+
+        th,
+        td {
+            padding: 10px;
+        }
+
+        table thead th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .navigation span {
+            color: red;
+            ;
+            font-size: 25px;
+            text-align: center;
+        }
+
+        .navigation {
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .info {
+            width: 80%;
+        }
+
+            .info tbody tr:hover {
+                background-color: lightskyblue;
+            }
+
+        #btnClear {
+            height: 90%;
+            background-color: lightblue;
+        }
+
+            #btnClear:hover {
+                background-color: gray;
+            }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <div class="imgTitle"><img src="~/wwwroot/Images/Logo.png" alt="" /></div>
+            <div class="titleHeader">
+                <strong>
+                    <img src="~/wwwroot/Images/book.png" alt="" />HỌC HẾT SỨC - CHƠI
+                    HẾTMÌNH
+                </strong>
+                <div class="Search"> <input type="text" name="Search" placeholder="Nhập thông tin cần tìm!"> <button id="Search" type="button" onclick="chuPhatTrien()">Tìm</button></div>
+            </div>
+        </div>
+        <div style="height: 50px;" class="navigation">
+            <span>Lập phiếu mượn</span>
+        </div>
+    </header>
+    <div class="container">
+        <table>
+            <tr>
+                <td><label for="maPhieu">Mã phiếu mượn</label></td>
+                <td><input type="text" id="maPhieu" /></td>
+                <td><label for="nguoiLap">Người lập</label></td>
+                <td><input type="text" id="nguoiLap" /></td>
+                <td><button type="button" id="btnClear">Xóa thông tin</button></td>
+            </tr>
+            <tr>
+                <td><label for="maDocGia">Mã độc giả</label></td>
+                <td><input type="text" id="maDocGia" /></td>
+                <td><label for="ngayLap">Ngày lập</label></td>
+                <td><input type="date" id="ngayLap" /></td>
+            </tr>
+        </table>
+        <div class="buttons">
+            <button type="button" onclick="themPhieuMuon()">Thêm</button>
+            <button type="button" onclick="xoaPhieuMuon()">Xóa</button>
+            <button type="button"onclick="capNhatPhieuMuon()">Cập nhật</button>
+            <button type="button"onclick="baoCao()" >Báo cáo</button>
+            <button type="button" onclick="location.href = '@Url.Action("LibrarianHome","Home")'">Thoát</button>
+        </div>
+    </div>
+    <h2>Danh sách phiếu mượn</h2>
+    <table class="info">
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Mã phiếu mượn</th>
+                <th>Mã độc giả</th>
+                <th>Người lập</th>
+                <th>Ngày lập</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var db = new Library_Management.Models.QUANLYTHUVIENEntities();
+                var list = (
+                    from t in db.THEBANDOCs
+                    join p in db.PHIEUMUONs on t.MASOTHE equals p.MASOTHE
+                    select new
+                    {
+                        maPhieu = p.MAPHIEUMUON,
+                        maDocGia = t.MASOTHE,
+                        nguoiLap = p.MANV,
+                        ngayLap = p.NGAYMUON,
+
+                    }
+                    ).ToList();
+                int stt = 1;
+                foreach (var item in list)
+                {
+                    <tr>
+                        <td>@stt</td>
+                        <td>@item.maPhieu</td>
+                        <td>@item.maDocGia</td>
+                        <td>@item.nguoiLap</td>
+                        <td>@item.ngayLap.ToString("yyyy-MM-dd")</td>
+                    </tr>
+                    stt++;
+                }
+            }
+        </tbody>
+    </table>
+    <script src="@Url.Content("~/wwwroot/JS/jquery-3.3.1.min.js")"></script>
+
+    <script>
+        //Event click
+        $(document).ready(function () {
+            console.log("jQuery ready!");
+            $(".info tbody tr").not(':first').click(function () {
+                var code = $(this).find("td:eq(1)").text().trim(); // Mã phiếu
+                var readerId = $(this).find("td:eq(2)").text().trim(); // Mã độc giả
+                var staffId = $(this).find("td:eq(3)").text().trim(); // Mã nhân viên
+                var ngayLapText = $(this).find("td:eq(4)").text().trim(); // Ngày lập
+
+                $("#maPhieu").val(code);
+                $("#maDocGia").val(readerId);
+                $("#nguoiLap").val(staffId);
+                $("#ngayLap").val(ngayLapText);
+
+            });
+        });
+        //xóa
+        $("#btnClear").click(function () {
+            $("#maPhieu").val('');
+            $("#maDocGia").val('');
+            $("#nguoiLap").val('');
+            $("#ngayLap").val('');
+        });
+        // Lấy dữ liệu từ form
+        function getFormData() {
+            return {
+                maPhieu: $("#maPhieu").val(),
+                maDocGia: $("#maDocGia").val(),
+                nguoiLap: $("#nguoiLap").val(),
+                ngayLap: $("#ngayLap").val()
+            };
+        }
+
+        // THÊM phiếu mượn
+        function themPhieuMuon() {
+            const data = getFormData();
+            if (!data.maPhieu || !data.maDocGia || !data.nguoiLap || !data.ngayLap) {
+                alert("Vui lòng điền đầy đủ thông tin.");
+                return;
+            }
+
+            $.post("/RequiredDocuments/Add", data, function (res) {
+                alert(res.message);
+                location.reload();
+            }).fail(function () {
+                alert("Lỗi khi thêm phiếu mượn.");
+            });
+        }
+
+        // XÓA phiếu mượn
+        function xoaPhieuMuon() {
+            const maPhieu = $("#maPhieu").val();
+            if (!maPhieu) {
+                alert("Vui lòng chọn phiếu mượn để xóa.");
+                return;
+            }
+
+            if (confirm("Bạn có chắc chắn muốn xóa phiếu mượn này không?")) {
+                $.post("/RequiredDocuments/Delete", { maPhieu: maPhieu }, function (res) {
+                    alert(res.message);
+                    location.reload();
+                }).fail(function () {
+                    alert("Lỗi khi xóa phiếu mượn.");
+                });
+            }
+        }
+
+        // CẬP NHẬT phiếu mượn
+        function capNhatPhieuMuon() {
+            const data = getFormData();
+            if (!data.maPhieu || !data.maDocGia || !data.nguoiLap || !data.ngayLap) {
+                alert("Vui lòng điền đầy đủ thông tin.");
+                return;
+            }
+
+            $.post("/RequiredDocuments/Update", data, function (res) {
+                alert(res.message);
+                location.reload();
+            }).fail(function () {
+                alert("Lỗi khi cập nhật phiếu mượn.");
+            });
+        }
+
+        // BÁO CÁO phiếu mượn
+        function baoCao() {
+            $.get("/RequiredDocuments/Report", function (res) {
+                let output = "📊 Báo cáo số lượng phiếu mượn theo tháng:\n\n";
+                res.forEach(r => {
+                    output += `📅 Tháng ${r.Thang}/${r.Nam}: ${r.SoLuong} phiếu mượn\n`;
+                });
+                alert(output);
+            }).fail(function () {
+                alert("Lỗi khi lấy dữ liệu báo cáo.");
+            });
+        }
+
+        function chuPhatTrien() {
+            alert("Chức năng đang phát triển");
+        }
+    </script>
+</body>
+</html>
+
+

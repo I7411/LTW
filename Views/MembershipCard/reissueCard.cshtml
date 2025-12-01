@@ -1,0 +1,101 @@
+﻿
+@{
+    ViewBag.Title = "reissueCard";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Đăng ký lại thẻ độc giả</title>
+    <link rel="stylesheet" href="~/wwwroot/css/caplaithe.css" />
+    <link rel="icon" type="image/png" href="~/wwwroot/Images/logoCongThuong.png" />
+    <style>
+        table {
+            border-spacing: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Đăng ký cấp thẻ lại</h1>
+    <div class="container">
+        <div class="head"><b>Đăng ký cấp lại thẻ</b></div>
+        <p>Thông tin cá nhân</p>
+
+        @if (TempData["Notice"] != null)
+        {
+            <div id="Notice" style="display: flex; align-items: center; justify-content: center;
+                            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+                            padding: 10px 20px; color: white; background-color: greenyellow;
+                            height: auto; max-width: 90%; z-index: 1000;
+                            border-radius: 5px; font-weight: bold;">
+                @TempData["Notice"]
+            </div>
+        }
+        <hr />
+        @using (Html.BeginForm("re_issueCard", "MembershipCard", FormMethod.Post))
+        {
+
+            <div class="content">
+                <table>
+                    @{
+                        var userId = Session["MANGUOIDUNG"];
+                        var Database = new Library_Management.Models.QUANLYTHUVIENEntities();
+                        var docgia = (from r in Database.DOCGIAs
+                                      join t in Database.THEBANDOCs on r.MATHANHVIEN equals t.MATHANHVIEN
+                                      where t.MATHANHVIEN == (string)userId
+                                      select new Library_Management.Models.Card
+
+                                      {
+                                          MATV = r.MATHANHVIEN,
+                                          HOTEN = r.TENTV,
+                                          MATHE = t.MASOTHE,
+                                          NGSINH = (DateTime)r.NGSINH,
+                                          GIOITINH = r.GIOITINH,
+                                          TINHTRANG = t.TINHTRANGTHE,
+                                          EMAIL = r.EMAIL
+
+                                      }).FirstOrDefault();
+                    }
+                    <tr>
+                        <td id="dauhang">CCCD/Mã thẻ:</td>
+                        <td><input type="text" name="used" id="used" value="@docgia.MATV" disabled/></td>
+                    </tr>
+                    <tr>
+                        <td id="dauhang">Họ và tên:</td>
+                        <td>
+                            <input type="text" name="used" id="used" value="@docgia.HOTEN" disabled/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="dauhang">Email:</td>
+                        <td>
+                            <input style="width: 100%;" type="email" name="email" id="email" value="@docgia.EMAIL " disabled />
+                        </td>
+                    </tr>
+                </table>
+                <p>Lý do cập nhật</p>
+                <hr />
+                <table>
+                    <tr>
+                        <td colspan="2" style="text-align: center;">
+                            <div style="display: inline-block; text-align: left;">
+                                <label><input type="radio" name="lydo" value="Mất thẻ" /> Mất thẻ</label><br />
+                                <label><input type="radio" name="lydo" value="Hỏng thẻ" /> Hỏng thẻ</label><br />
+                                <label><input type="radio" name="lydo" value="Thay đổi thông tin" /> Thay đổi thông tin</label>
+                            </div>
+                        </td>
+                    </tr>
+
+                </table>
+                <div class="button">
+                    <button  type="submit">Gửi yêu cầu</button>
+                    <button onclick="location.href = '@Url.Action("InfoReader","Infomation")'" type="button">Hủy</button>
+                </div>
+            </div>
+        }
+        </div>
+</body>
+</html>
+

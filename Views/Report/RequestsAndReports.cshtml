@@ -1,0 +1,194 @@
+﻿
+@{
+    ViewBag.Title = "RequestsAndReports";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/wwwroot/css/ReaderManagement.css" />
+    <link rel="stylesheet" href="~/wwwroot/css/MainPage_Admin.css" />
+    <link rel="stylesheet" href="~/wwwroot/css/AccountManagement.css">
+    <title>Human Resource Management</title>
+    <link rel="icon" type="image/png" href="~/wwwroot/Images/logoCongThuong.png" />
+    <style>
+        tr td:first-child {
+            width: 150px;
+        }
+
+        tr {
+            border: solid 1px;
+        }
+
+        #add table {
+            background-color: lightgray;
+            border: none
+        }
+
+        #add {
+            padding: 10px;
+            border: solid 1px black;
+        }
+
+            #add td {
+                height: 30px;
+                ;
+            }
+
+        .navigation span {
+            color: red;
+            ;
+            font-size: 25px;
+            text-align: center;
+        }
+
+        .navigation {
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        label {
+            color: black;
+            font-weight: normal;
+            font-style: italic;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        #add h3 {
+            font-size: 30px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        textarea {
+            width: 100%;
+            max-width: 1000px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <div class="imgTitle"><img src="~/wwwroot/Images/Logo.png" alt="" /></div>
+            <div class="titleHeader">
+                <strong>
+                    <img src="~/wwwroot/Images/book.png" alt="" />HỌC HẾT SỨC - CHƠI
+                    HẾTMÌNH
+                </strong>
+                <div class="Search"> <input type="text" name="Search" placeholder="Nhập thông tin cần tìm!"> <button id="Search">Tìm</button></div>
+            </div>
+        </div>
+        <div style="height: 50px;" class="navigation">
+            <span>Duyệt báo cáo, yêu cầu</span>
+        </div>
+    </header>
+    <div class="Info">
+        <form>
+            <div class="btn">
+                <button type="button" id="btnPheDuyet">Phê duyệt</button>
+                <button type="button" id="btnHuyPheDuyet">Hủy phê duyệt</button>
+                <button type="button" id="btnTuChoi">Từ chối</button>
+                <button type="button" onclick="location.href = '@Url.Action("AdminHome","Home")'">Thoát</button>
+            </div>
+            <table>
+                <tr>
+                    <td><label for="">Mã báo cáo <br><input type="text" id="maBaoCao"></label></td>
+                    <td><label for="">Tên báo cáo<input type="text" id="tenBaoCao"></label></td>
+                    <td><label for="">Trạng thái <input type="text" id="trangThai"></label></td>
+                </tr>
+                @*<tr style="position: relative;">
+                        <td colspan="3" style="height: 100px;">
+                            <label for="">Nội dung chi tiết <br> <textarea id="noiDung"></textarea></label>
+                        </td>
+                    </tr>*@
+            </table>
+        </form>
+    </div>
+    <div class="Infotable">
+        <div class="title" id="title"><h2>Danh sách báo cáo</h2></div>
+        <table>
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Mã báo cáo</th>
+                    <th>tên báo cáo</th>
+                    <th>Trạng thái</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var db = new Library_Management.Models.QUANLYTHUVIENEntities();
+                    var ds = db.MUATAILIEUMOIs;
+                    int stt = 1;
+                    foreach (var item in ds)
+                    {
+                        <tr>
+                            <td>@stt</td>
+                            <td>@item.MAMUA</td>
+                            <td>Mua mới</td>
+                            <td>@item.TRANGTHAI</td>
+                        </tr>
+                        stt++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <script src="@Url.Content("~/wwwroot/JS/jquery-3.3.1.min.js")"></script>
+
+    <script src="~/wwwroot/JS/AccountManagement.js">
+    </script>
+    <script>
+        $(".Infotable tbody tr").on("click", function () {
+            var maBaoCao = $(this).find("td:eq(1)").text().trim();
+            var tenBaoCao = $(this).find("td:eq(2)").text().trim();
+            var trangThai = $(this).find("td:eq(3)").text().trim();
+
+            $("#maBaoCao").val(maBaoCao);
+            $("#tenBaoCao").val(tenBaoCao);
+            $("#trangThai").val(trangThai);
+        });
+         function updateStatus(status) {
+        var maBaoCao = $("#maBaoCao").val();
+
+        if (!maBaoCao) {
+            alert("Vui lòng chọn báo cáo trước.");
+            return;
+        }
+
+        $.ajax({
+            url: '@Url.Action("CapNhatTrangThai", "Report")',
+            type: 'POST',
+            data: { maBaoCao: maBaoCao, trangThaiMoi: status },
+            success: function (response) {
+                alert(response.message);
+                location.reload();
+            },
+            error: function () {
+                alert("Lỗi khi cập nhật trạng thái!");
+            }
+        });
+    }
+
+    $("#btnPheDuyet").on("click", function () {
+        updateStatus("Đã phê duyệt");
+    });
+
+    $("#btnHuyPheDuyet").on("click", function () {
+        updateStatus("Chưa phê duyệt");
+    });
+
+    $("#btnTuChoi").on("click", function () {
+        updateStatus("Từ chối");
+    });
+    </script>
+</body>
+</html>
+
+

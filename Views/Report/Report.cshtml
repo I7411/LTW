@@ -1,0 +1,471 @@
+﻿
+@{
+    ViewBag.Title = "Report";
+    Layout = null; 
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Báo cáo mượn trả - Thư viện</title>
+    <link rel="icon" type="image/png" href="~/wwwroot/Images/logoCongThuong.png" />
+    <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .header-container {
+      display: flex;
+      background-color: #007bff;
+      padding: 15px 20px;
+      color: white;
+      align-items: center;
+    }
+
+    .university-info {
+      flex-grow: 1;
+    }
+
+    .university-name {
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+
+    .library-name {
+      font-size: 16px;
+    }
+
+    .search-bar {
+      background-color: #0b0c66;
+      padding: 10px;
+      color: white;
+      text-align: center;
+      font-size: 20px;
+      font-style: italic;
+    }
+
+    .report-actions {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      padding: 15px;
+      background-color: #f3f3f3;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .report-button {
+      padding: 8px 20px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.3s;
+    }
+
+    .statistics-button {
+      background-color: #17a2b8;
+      color: white;
+    }
+
+    .exit-button {
+      background-color: #dc3545;
+      color: white;
+      text-decoration: none;
+    }
+
+    .data-options {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      margin: 20px 0;
+      padding: 20px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .data-option-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .data-option {
+      padding: 10px 20px;
+      border-radius: 5px;
+      border: 1px solid #007bff;
+      cursor: pointer;
+      background-color: white;
+      color: #007bff;
+      transition: all 0.3s;
+    }
+
+    .data-option:hover, .data-option.active {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .option-details {
+      display: none;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .option-select {
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #aaa;
+      min-width: 120px;
+    }
+
+    .generate-report-button {
+      padding: 10px 30px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+
+    .generate-report-button:hover {
+      background-color: #218838;
+    }
+
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .popup-content {
+      background-color: white;
+      padding: 25px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 1000px;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .popup-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 24px;
+      cursor: pointer;
+      color: #666;
+    }
+
+    .popup-actions {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .popup-button {
+      padding: 10px 25px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      transition: opacity 0.3s;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+
+    th, td {
+      border: 1px solid #dee2e6;
+      padding: 12px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #007bff;
+      color: white;
+      font-weight: bold;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f8f9fa;
+    }
+
+    .no-data {
+      text-align: center;
+      padding: 20px;
+      color: #6c757d;
+      font-style: italic;
+    }
+
+    @*@media print {
+      .popup-actions, .popup-close {
+        display: none !important;
+      }
+
+      .popup-content {
+        box-shadow: none;
+        border: none;
+      }
+    }*@
+    </style>
+</head>
+<body>
+
+    <div class="header-container">
+        <div class="university-info">
+            <div class="university-name">ĐẠI HỌC CÔNG THƯƠNG TP. HỒ CHÍ MINH</div>
+            <div class="library-name">TRUNG TÂM THÔNG TIN - THƯ VIỆN</div>
+        </div>
+    </div>
+
+    <div class="search-bar">
+        BÁO CÁO MƯỢN TRẢ SÁCH
+    </div>
+
+    <div class="report-actions">
+        <button class="report-button statistics-button" id="statisticsButton">Thống kê</button>
+        <a href="@Url.Action("LibrarianHome","Home")" class="report-button exit-button">Thoát</a>
+    </div>
+
+    <div class="data-options" id="dataOptions">
+        <div class="data-option-group">
+            <div class="data-option" data-type="all">Tất cả dữ liệu</div>
+            <div class="data-option" data-type="month">Theo tháng</div>
+            <div class="data-option" data-type="quarter">Theo quý</div>
+            <div class="data-option" data-type="year">Theo năm</div>
+        </div>
+
+        <div class="option-details" id="monthDetails">
+            <select class="option-select" id="monthSelect">
+                <option value="1">Tháng 1</option>
+                <option value="2">Tháng 2</option>
+                <option value="3">Tháng 3</option>
+                <option value="4">Tháng 4</option>
+                <option value="5">Tháng 5</option>
+                <option value="6">Tháng 7</option>
+                <option value="7">Tháng 7</option>
+                <option value="8">Tháng 8</option>
+                <option value="9">Tháng 1</option>
+                <option value="10">Tháng 10</option>
+                <option value="11">Tháng 11</option>
+                <option value="12">Tháng 12</option>
+            </select>
+            <select class="option-select" id="yearSelectForMonth">
+                <option value="2023">2023</option>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+            </select>
+        </div>
+
+        <div class="option-details" id="quarterDetails">
+            <select class="option-select" id="quarterSelect">
+                <option value="1">Quý 1</option>
+                <option value="2">Quý 2</option>
+                <option value="2">Quý 3</option>
+                <option value="4">Quý 4</option>
+            </select>
+            <select class="option-select" id="yearSelectForQuarter">
+                <option value="2023">2023</option>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+            </select>
+        </div>
+
+        <div class="option-details" id="yearDetails">
+            <select class="option-select" id="yearSelect">
+                <option value="2023">2023</option>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+            </select>
+        </div>
+
+        <button class="generate-report-button" id="generateReportButton">Xem báo cáo</button>
+    </div>
+
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup-content">
+            <span class="popup-close" id="popupClose">&times;</span>
+            <h2 style="text-align: center; margin-bottom: 20px;">BÁO CÁO MƯỢN TRẢ SÁCH</h2>
+            <div id="popupTableContainer">
+                <table id="popupTable">
+                    <thead>
+                        <tr>
+                            <th>Mã tài liệu</th>
+                            <th>Tên tài liệu</th>
+                            <th>Ngày mượn</th>
+                            <th>Hạn trả</th>
+                            <th>Người mượn</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody id="popupTableBody"></tbody>
+                </table>
+                <div id="popupNoData" class="no-data" style="display: none;">
+                    Không có dữ liệu mượn trả
+                </div>
+            </div>
+            <div class="popup-actions">
+                <button class="popup-button print-button" id="printButton">In báo cáo</button>
+                <button class="popup-button confirm-button" id="confirmButton">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    const reportData = {
+      all: [
+        { id: 'TL001', name: 'Lập trình Web', borrowDate: '01/03/2024', dueDate: '15/03/2024', borrower: 'Nguyễn Văn A', status: 'Đang mượn' },
+        { id: 'TL002', name: 'Toán cao cấp', borrowDate: '25/02/2024', dueDate: '10/03/2024', borrower: 'Trần Thị B', status: 'Đã trả' },
+        { id: 'TL003', name: 'Kinh tế học', borrowDate: '15/01/2024', dueDate: '30/01/2024', borrower: 'Lê Văn C', status: 'Quá hạn' }
+      ],
+      month: {
+        '3-2024': [
+          { id: 'TL001', name: 'Lập trình Web', borrowDate: '01/03/2024', dueDate: '15/03/2024', borrower: 'Nguyễn Văn A', status: 'Đang mượn' }
+        ]
+      },
+      quarter: {
+        '1-2024': [
+          { id: 'TL002', name: 'Toán cao cấp', borrowDate: '25/02/2024', dueDate: '10/03/2024', borrower: 'Trần Thị B', status: 'Đã trả' }
+        ]
+      },
+      year: {
+        '2024': [
+          { id: 'TL003', name: 'Kinh tế học', borrowDate: '15/01/2024', dueDate: '30/01/2024', borrower: 'Lê Văn C', status: 'Quá hạn' }
+        ]
+      }
+    };
+
+    const statisticsButton = document.getElementById('statisticsButton');
+    const dataOptions = document.getElementById('dataOptions');
+    const optionButtons = document.querySelectorAll('.data-option');
+    const generateReportButton = document.getElementById('generateReportButton');
+    const popupOverlay = document.getElementById('popupOverlay');
+    const popupClose = document.getElementById('popupClose');
+    const popupTableBody = document.getElementById('popupTableBody');
+    const popupNoData = document.getElementById('popupNoData');
+    let currentSelection = null;
+
+    statisticsButton.addEventListener('click', () => {
+      dataOptions.style.display = 'flex';
+    });
+
+    optionButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        optionButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        currentSelection = button.dataset.type;
+
+        document.querySelectorAll('.option-details').forEach(detail => {
+          detail.style.display = 'none';
+        });
+
+        switch(currentSelection) {
+          case 'month':
+            document.getElementById('monthDetails').style.display = 'flex';
+            break;
+          case 'quarter':
+            document.getElementById('quarterDetails').style.display = 'flex';
+            break;
+          case 'year':
+            document.getElementById('yearDetails').style.display = 'flex';
+            break;
+          default:
+            break;
+        }
+      });
+    });
+
+    generateReportButton.addEventListener('click', () => {
+      if (!currentSelection) {
+        alert('Vui lòng chọn loại báo cáo trước!');
+        return;
+      }
+
+      let data = [];
+      switch(currentSelection) {
+        case 'all':
+          data = reportData.all;
+          break;
+        case 'month':
+          const month = document.getElementById('monthSelect').value;
+          const yearM = document.getElementById('yearSelectForMonth').value;
+          data = reportData.month[`${month}-${yearM}`] || [];
+          break;
+        case 'quarter':
+          const quarter = document.getElementById('quarterSelect').value;
+          const yearQ = document.getElementById('yearSelectForQuarter').value;
+          data = reportData.quarter[`${quarter}-${yearQ}`] || [];
+          break;
+        case 'year':
+          const yearY = document.getElementById('yearSelect').value;
+          data = reportData.year[yearY] || [];
+          break;
+      }
+
+      showPopup(data);
+    });
+
+    function showPopup(data) {
+      popupTableBody.innerHTML = '';
+      popupNoData.style.display = 'none';
+
+      if (data.length === 0) {
+        popupNoData.style.display = 'block';
+      } else {
+        data.forEach(item => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${item.id}</td>
+            <td>${item.name}</td>
+            <td>${item.borrowDate}</td>
+            <td>${item.dueDate}</td>
+            <td>${item.borrower}</td>
+            <td>${item.status}</td>
+          `;
+          popupTableBody.appendChild(row);
+        });
+      }
+
+      popupOverlay.style.display = 'flex';
+    }
+
+    popupClose.addEventListener('click', () => {
+      popupOverlay.style.display = 'none';
+    });
+
+    document.getElementById('printButton').addEventListener('click', () => {
+      window.print();
+    });
+
+    document.getElementById('confirmButton').addEventListener('click', () => {
+      popupOverlay.style.display = 'none';
+    });
+
+    popupOverlay.addEventListener('click', (e) => {
+      if (e.target === popupOverlay) {
+        popupOverlay.style.display = 'none';
+      }
+    });
+    </script>
+</body>
+</html>
+

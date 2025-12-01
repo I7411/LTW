@@ -1,0 +1,582 @@
+﻿
+@{
+    ViewBag.Title = "SellDocument";
+    Layout = null; 
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý thanh lý tài liệu - Thư viện</title>
+    <link rel="icon" type="image/png" href="~/wwwroot/Images/logoCongThuong.png" />
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .header-container {
+            display: flex;
+            background-color: #007bff;
+            padding: 15px 20px;
+            color: white;
+            align-items: center;
+        }
+
+        .logo {
+            height: 60px;
+            margin-right: 20px;
+        }
+
+        .university-info {
+            flex-grow: 1;
+        }
+
+        .university-name {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .library-name {
+            font-size: 16px;
+        }
+
+        .banner {
+            font-size: 18px;
+            font-weight: bold;
+            padding-left: 20px;
+            border-left: 2px solid white;
+            margin-left: 20px;
+        }
+
+        .search-bar {
+            background-color: #0b0c66;
+            padding: 10px;
+            color: white;
+            text-align: center;
+            font-size: 20px;
+            font-style: italic;
+        }
+
+        .action-buttons {
+            display: flex;
+            padding: 20px;
+            background-color: #f3f3f3;
+            gap: 15px;
+        }
+
+        .action-button {
+            padding: 10px 25px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .add-button {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .edit-button {
+            background-color: #ffc107;
+            color: black;
+        }
+
+        .delete-button {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .exit-button {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .action-button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .table-container {
+            margin: 20px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        th, td {
+            border: 1px solid #aaa;
+            padding: 10px;
+        }
+
+        th {
+            background-color: #ccc;
+            font-size: 18px;
+        }
+
+        td {
+            background-color: #fff;
+        }
+
+        .checkbox-cell {
+            width: 30px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 70%;
+            max-width: 800px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+            .close:hover {
+                color: black;
+            }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 5px;
+                font-weight: bold;
+            }
+
+            .form-group input[type="text"],
+            .form-group input[type="date"],
+            .form-group textarea {
+                width: 100%;
+                padding: 8px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                box-sizing: border-box;
+            }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-button {
+            padding: 8px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .save-button {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .cancel-button {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .document-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+            .document-table th,
+            .document-table td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }
+
+            .document-table th {
+                background-color: #f2f2f2;
+            }
+
+        .document-actions {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+
+        .notification-modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .notification-content {
+            background-color: #fefefe;
+            margin: 20% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 30%;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        .notification-button {
+            padding: 8px 20px;
+            margin-top: 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-container">
+        <img src="~/wwwroot/Images/Logo.jpg" alt="Logo" class="logo">
+        <div class="university-info">
+            <div class="university-name">ĐẠI HỌC CÔNG THƯƠNG TP. HỒ CHÍ MINH</div>
+            <div class="library-name">TRUNG TÂM THÔNG TIN - THƯ VIỆN</div>
+        </div>
+        <div class="banner">HỌC HẾT SỨC - CHƠI HẾT MÌNH</div>
+    </div>
+
+    <div class="search-bar">
+        QUẢN LÝ THANH LÝ TÀI LIỆU - SÁCH
+    </div>
+
+    <div class="action-buttons">
+        <button class="action-button add-button" id="addButton">Thêm</button>
+        <button class="action-button edit-button" id="editButton">Sửa</button>
+        <button class="action-button delete-button" id="deleteButton">Xóa</button>
+        <a href="@Url.Action("LibrarianHome","Home")" class="action-button exit-button">Thoát</a>
+    </div>
+
+    <div class="table-container">
+        <table id="liquidationTable">
+            <thead>
+                <tr>
+                    <th class="checkbox-cell"></th>
+                    <th>STT</th>
+                    <th>MÃ PHIẾU THANH LÝ</th>
+                    <th>NGÀY LẬP PHIẾU</th>
+                    <th>GHI CHÚ</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="checkbox" name="selectRow"></td>
+                    <td>01</td>
+                    <td>TL00001</td>
+                    <td>27/09/2024</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="selectRow"></td>
+                    <td>02</td>
+                    <td>TL00002</td>
+                    <td>03/02/2025</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Thêm tài liệu - sách thanh lý</h2>
+            <div class="form-group">
+                <label for="addVoucherCode">Mã phiếu (*):</label>
+                <input type="text" id="addVoucherCode" placeholder="Nhập mã phiếu">
+            </div>
+            <div class="form-group">
+                <label for="addVoucherDate">Ngày lập phiếu (*):</label>
+                <input type="date" id="addVoucherDate">
+            </div>
+            <div class="form-group">
+                <label for="addNote">Ghi chú:</label>
+                <textarea id="addNote" rows="3"></textarea>
+            </div>
+
+            <div class="document-actions">
+                <button class="action-button delete-button" id="removeDocumentButton">Xóa tài liệu đã chọn</button>
+            </div>
+
+            <table class="document-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Mã tài liệu - sách</th>
+                        <th>Tên tài liệu - sách</th>
+                        <th>Kho</th>
+                    </tr>
+                </thead>
+                <tbody id="addDocumentTableBody">
+                </tbody>
+            </table>
+
+            <div class="form-actions">
+                <button class="modal-button save-button" id="saveAddButton">Lưu</button>
+                <button class="modal-button cancel-button" id="cancelAddButton">Hủy bỏ</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Sửa tài liệu - sách thanh lý</h2>
+            <div class="form-group">
+                <label for="editVoucherCode">Mã phiếu (*):</label>
+                <input type="text" id="editVoucherCode" placeholder="Nhập mã phiếu" value="TL00001">
+            </div>
+            <div class="form-group">
+                <label for="editVoucherDate">Ngày lập phiếu (*):</label>
+                <input type="date" id="editVoucherDate" value="2024-09-27">
+            </div>
+            <div class="form-group">
+                <label for="editNote">Ghi chú:</label>
+                <textarea id="editNote" rows="3"></textarea>
+            </div>
+
+            <div class="document-actions">
+                <button class="action-button delete-button" id="removeEditDocumentButton">Xóa tài liệu đã chọn</button>
+            </div>
+
+            <table class="document-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Mã tài liệu - sách</th>
+                        <th>Tên tài liệu - sách</th>
+                        <th>Kho</th>
+                    </tr>
+                </thead>
+                <tbody id="editDocumentTableBody">
+                    <tr>
+                        <td><input type="checkbox" name="selectEditDocument"></td>
+                        <td>1009876544</td>
+                        <td>Thực hành cơ sở dữ liệu</td>
+                        <td>Kho A</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" name="selectEditDocument"></td>
+                        <td>1004345678</td>
+                        <td>Cấu trúc rời rạc</td>
+                        <td>Kho B</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="form-actions">
+                <button class="modal-button save-button" id="saveEditButton">Lưu</button>
+                <button class="modal-button cancel-button" id="cancelEditButton">Hủy bỏ</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="notificationModal" class="notification-modal">
+        <div class="notification-content">
+            <h3>Thông báo</h3>
+            <p id="notificationMessage">Thêm phiếu thanh lý thành công</p>
+            <button class="notification-button" id="notificationButton">OK</button>
+        </div>
+    </div>
+
+    <script>
+    const availableDocuments = [
+      { id: '1009876544', name: 'Thực hành cơ sở dữ liệu', location: 'Kho A' },
+      { id: '1004345678', name: 'Cấu trúc rời rạc', location: 'Kho B' },
+      { id: '1001234567', name: 'Giáo trình Lập trình Web', location: 'Kho chính' },
+      { id: '1007654321', name: 'Giáo trình Kinh tế học', location: 'Kho phụ' },
+      { id: '1001122334', name: 'Toán cao cấp', location: 'Kho A' }
+    ];
+
+    const addModal = document.getElementById('addModal');
+    const editModal = document.getElementById('editModal');
+    const notificationModal = document.getElementById('notificationModal');
+
+    const addBtn = document.getElementById('addButton');
+    const editBtn = document.getElementById('editButton');
+    const deleteBtn = document.getElementById('deleteButton');
+
+    const addClose = addModal.querySelector('.close');
+    const editClose = editModal.querySelector('.close');
+    const notificationClose = document.getElementById('notificationButton');
+
+    const saveAddBtn = document.getElementById('saveAddButton');
+    const cancelAddBtn = document.getElementById('cancelAddButton');
+    const saveEditBtn = document.getElementById('saveEditButton');
+    const cancelEditBtn = document.getElementById('cancelEditButton');
+
+    const removeDocumentBtn = document.getElementById('removeDocumentButton');
+    const removeEditDocumentBtn = document.getElementById('removeEditDocumentButton');
+
+    addBtn.onclick = function() {
+      addModal.style.display = "block";
+      loadAvailableDocuments();
+    }
+
+    editBtn.onclick = function() {
+      const selectedRow = document.querySelector('input[name="selectRow"]:checked');
+      if (!selectedRow) {
+        showNotification("Vui lòng chọn phiếu thanh lý để sửa");
+        return;
+      }
+      editModal.style.display = "block";
+    }
+
+    deleteBtn.onclick = function() {
+      const selectedRow = document.querySelector('input[name="selectRow"]:checked');
+      if (!selectedRow) {
+        showNotification("Vui lòng chọn phiếu thanh lý để xóa");
+        return;
+      }
+      showNotification("Đã xóa phiếu thanh lý thành công");
+    }
+
+    addClose.onclick = function() {
+      addModal.style.display = "none";
+    }
+
+    editClose.onclick = function() {
+      editModal.style.display = "none";
+    }
+
+    notificationClose.onclick = function() {
+      notificationModal.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+      if (event.target == addModal) {
+        addModal.style.display = "none";
+      }
+      if (event.target == editModal) {
+        editModal.style.display = "none";
+      }
+      if (event.target == notificationModal) {
+        notificationModal.style.display = "none";
+      }
+    }
+
+    saveAddBtn.onclick = function() {
+      const voucherCode = document.getElementById('addVoucherCode').value;
+      const voucherDate = document.getElementById('addVoucherDate').value;
+
+      if (!voucherCode || !voucherDate) {
+        showNotification("Vui lòng nhập đầy đủ thông tin bắt buộc (*)");
+        return;
+      }
+
+      addModal.style.display = "none";
+      showNotification("Thêm phiếu thanh lý thành công");
+    }
+
+    saveEditBtn.onclick = function() {
+      const voucherCode = document.getElementById('editVoucherCode').value;
+      const voucherDate = document.getElementById('editVoucherDate').value;
+
+      if (!voucherCode || !voucherDate) {
+        showNotification("Vui lòng nhập đầy đủ thông tin bắt buộc (*)");
+        return;
+      }
+
+      editModal.style.display = "none";
+      showNotification("Đã sửa phiếu thanh lý thành công");
+    }
+
+    // Cancel buttons
+    cancelAddBtn.onclick = function() {
+      addModal.style.display = "none";
+    }
+
+    cancelEditBtn.onclick = function() {
+      editModal.style.display = "none";
+    }
+
+    function loadAvailableDocuments() {
+      const tableBody = document.getElementById('addDocumentTableBody');
+      tableBody.innerHTML = '';
+
+      availableDocuments.forEach(doc => {
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+          <td><input type="checkbox" name="selectDocument"></td>
+          <td>${doc.id}</td>
+          <td>${doc.name}</td>
+          <td>${doc.location}</td>
+        `;
+        tableBody.appendChild(newRow);
+      });
+    }
+
+    removeDocumentBtn.onclick = function() {
+      const selectedDocs = document.querySelectorAll('input[name="selectDocument"]:checked');
+      if (selectedDocs.length === 0) {
+        showNotification("Vui lòng chọn tài liệu để xóa");
+        return;
+      }
+
+      selectedDocs.forEach(checkbox => {
+        checkbox.closest('tr').remove();
+      });
+    }
+
+    removeEditDocumentBtn.onclick = function() {
+      const selectedDocs = document.querySelectorAll('input[name="selectEditDocument"]:checked');
+      if (selectedDocs.length === 0) {
+        showNotification("Vui lòng chọn tài liệu để xóa");
+        return;
+      }
+
+      selectedDocs.forEach(checkbox => {
+        checkbox.closest('tr').remove();
+      });
+    }
+
+    function showNotification(message) {
+      document.getElementById('notificationMessage').textContent = message;
+      notificationModal.style.display = "block";
+    }
+    </script>
+</body>
+</html>
+
