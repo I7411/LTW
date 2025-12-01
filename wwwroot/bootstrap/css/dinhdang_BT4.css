@@ -1,0 +1,18 @@
+﻿body {
+}
+.nav-item img{
+    height:50px;
+    width:50px;
+}
+.hinh{
+    display:flex;
+}
+.nav-item img:hover{
+    border:1px blue solid;
+}
+.form-group div{
+    display:flex;
+}
+.bang2{
+    border:1px solid black
+}

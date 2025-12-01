@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="dddb68c5c4ba46d98031ae3c99a42481" Name="Diagram1">
+        <EntityTypeShape EntityType="QUANLYTHUVIENModel.CAPNHATTHONGTIN" Width="1.5" PointX="5.25" PointY="8.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="QUANLYTHUVIENModel.CHITIETDATTRUOC" Width="1.5" PointX="8.25" PointY="15.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="QUANLYTHUVIENModel.CHITIETPHIEUMUON" Width="1.5" PointX="8.25" PointY="12.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="QUANLYTHUVIENModel.DATMUONTRUOC" Width="1.5" PointX="3" PointY="25.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="QUANLYTHUVIENModel.DATPHONG" Width="1.5" PointX="6" PointY="19.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="QUANLYTHUVIENModel.DOCGIA" Width="1.5" PointX="1.5" PointY="21" IsExpanded="true" />
+        <EntityTypeShape EntityType="QUANLYTHUVIENModel.GIAHANTAILIEU" Width="1.5" PointX="5.25" PointY="15.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="QUANLYTHUVIENModel.MUATAILIEUMOI" Width="1.5" PointX="3" PointY="8.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="QUANLYTHUVIENModel.NHANVIEN" Width="1.5" PointX="0.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="QUANLYTHUVIENModel.PHIEUMUON" Width="1.5" PointX="3" PointY="12.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="QUANLYTHUVIENModel.PHIEUPHAT" Width="1.5" PointX="8.25" PointY="8.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="QUANLYTHUVIENModel.PHONGHOC" Width="1.5" PointX="8.25" PointY="19.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="QUANLYTHUVIENModel.QUANLYTAILIEU" Width="1.5" PointX="6" PointY="12" IsExpanded="true" />
+        <EntityTypeShape EntityType="QUANLYTHUVIENModel.sysdiagrams" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="QUANLYTHUVIENModel.TAILIEU" Width="1.5" PointX="3" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="QUANLYTHUVIENModel.THANHLYTAILIEU" Width="1.5" PointX="3" PointY="18.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="QUANLYTHUVIENModel.THEBANDOC" Width="1.5" PointX="0.75" PointY="14.75" IsExpanded="true" />
+        <AssociationConnector Association="QUANLYTHUVIENModel.FK_CAPNHATT_CAPNHATTH_MUATAILI" ManuallyRouted="false" />
+        <AssociationConnector Association="QUANLYTHUVIENModel.FK_CAPNHATT_CAPNHATTH_TAILIEU" ManuallyRouted="false" />
+        <AssociationConnector Association="QUANLYTHUVIENModel.FK_CHITIETD_CHITIETDA_DATMUONT" ManuallyRouted="false" />
+        <AssociationConnector Association="QUANLYTHUVIENModel.FK_CHITIETD_CHITIETDA_TAILIEU" ManuallyRouted="false" />
+        <AssociationConnector Association="QUANLYTHUVIENModel.FK_CHITIETP_CHITIETPH_PHIEUMUO" ManuallyRouted="false" />
+        <AssociationConnector Association="QUANLYTHUVIENModel.FK_CHITIETP_CHITIETPH_TAILIEU" ManuallyRouted="false" />
+        <AssociationConnector Association="QUANLYTHUVIENModel.FK_DATMUONTRUOC_THEBANDOC" ManuallyRouted="false" />
+        <AssociationConnector Association="QUANLYTHUVIENModel.FK_DATPHONG_PHONGHOC" ManuallyRouted="false" />
+        <AssociationConnector Association="QUANLYTHUVIENModel.FK_DATPHONG_THEBANDOC" ManuallyRouted="false" />
+        <AssociationConnector Association="QUANLYTHUVIENModel.FK_THEBANDO_SOHUU_DOCGIA" ManuallyRouted="false" />
+        <AssociationConnector Association="QUANLYTHUVIENModel.FK_GIAHANTAILIEU_PHIEUMUON1" ManuallyRouted="false" />
+        <AssociationConnector Association="QUANLYTHUVIENModel.FK_MUATAILI_DUYETMUA_NHANVIEN" ManuallyRouted="false" />
+        <AssociationConnector Association="QUANLYTHUVIENModel.FK_NHANVIEN____UOC_QU_NHANVIEN" ManuallyRouted="false" />
+        <AssociationConnector Association="QUANLYTHUVIENModel.FK_PHIEUMUO_LAPPHIEUM_NHANVIEN" ManuallyRouted="false" />
+        <AssociationConnector Association="QUANLYTHUVIENModel.FK_PHIEUPHA_LAPPHIEUP_NHANVIEN" ManuallyRouted="false" />
+        <AssociationConnector Association="QUANLYTHUVIENModel.FK_QUANLYTA_QUANLYTAI_NHANVIEN" ManuallyRouted="false" />
+        <AssociationConnector Association="QUANLYTHUVIENModel.FK_THANHLYT_LAP_NHANVIEN" ManuallyRouted="false" />
+        <AssociationConnector Association="QUANLYTHUVIENModel.FK_PHIEUMUO_MUONTAILI_THEBANDO" ManuallyRouted="false" />
+        <AssociationConnector Association="QUANLYTHUVIENModel.FK_PHIEUPHA_XULYPHAT_PHIEUMUO" ManuallyRouted="false" />
+        <AssociationConnector Association="QUANLYTHUVIENModel.FK_QUANLYTA_QUANLYTAI_TAILIEU" ManuallyRouted="false" />
+        <AssociationConnector Association="QUANLYTHUVIENModel.NHANPHONG" ManuallyRouted="false" />
+        <AssociationConnector Association="QUANLYTHUVIENModel.XULYGIAHAN" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

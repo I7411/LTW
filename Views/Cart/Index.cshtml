@@ -1,0 +1,41 @@
+﻿@using QLTHUVIEN.Models
+@model List<CartItem>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+
+    <h2 class="page-title">Giỏ hàng</h2>
+
+    <div class="table-responsive bg-white p-3 rounded shadow-sm">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th style="width: 50%">Sách</th>
+                    <th style="width: 20%">Số lượng</th>
+                    <th style="width: 30%">Phí mượn</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.TenSach</td>
+                        <td>@item.SoLuong</td>
+                        <td>@item.PhiMuon.ToString("#,##0 VNĐ")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="d-flex justify-content-end mt-3">
+            <a href="/Cart/DatHang?maThe=THE001" class="btn btn-success btn-lg">
+                📘 Đặt mượn
+            </a>
+        </div>
+    </div>
+
+</div>

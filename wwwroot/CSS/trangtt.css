@@ -1,0 +1,56 @@
+.top {
+  display: flex;
+  width: 100%;
+  height: 100px;
+  background-color: aqua;
+}
+.top img {
+  height: 75px;
+  width: 50%;
+  margin: auto 5px;
+}
+.top p {
+  width: max-content;
+  font-size: 32px;
+  font-weight: bold;
+  justify-content: center;
+  margin: auto;
+}
+.container-fluid {
+  background-color: rgb(8, 8, 176);
+  color: white;
+}
+.btn {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: inherit; /* Giữ nguyên màu chữ */
+}
+.nav-item a {
+  color: white;
+  background-color: rgb(8, 8, 176);
+}
+.nav-item a:hover {
+  background: none;
+  color: inherit;
+}
+.container-fluid {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.bg {
+  min-height: 100vh; /* đảm bảo chiều cao tối thiểu bằng viewport */
+  width: 100%;
+  background-image: url(../Images/bg5.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
